@@ -1,22 +1,20 @@
-using Unity.VisualScripting;
+using System;
+using System.Numerics;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Rendering.PostProcessing;
+using Quaternion = UnityEngine.Quaternion;
+using Vector3 = UnityEngine.Vector3;
 
 public class PlayerController : MonoBehaviour
 {
     [field: SerializeField] public Transform CameraTransform { get; set; }
     [field: SerializeField] public PostProcessVolume PostProcessVolume { get; set; }
-    
-    private Controls _controls;
-
-    private InputAction _iMove;
-    private InputAction _iCrouch;
+    private CapsuleCollider _collider { get; set; }
     
     private Rigidbody _rb;
     private float _sin;
 
-    private const float MouseSensitivity = 5f;
     private float _cameraPitch;
 
     private float _counter;
@@ -25,20 +23,12 @@ public class PlayerController : MonoBehaviour
     private float _targetVignette;
 
     private Vignette _vignette;
-
-    private void Awake()
-    {
-        _controls = new Controls();
-        
-        _iMove = _controls.Player.Move;
-        
-        _iCrouch = _controls.Player.Crouch;
-        _iCrouch.performed += Crouch;
-        _iCrouch.canceled += Stand;
-    }
-
+    private bool _willStand;
+    
     private void Start()
     {
+        _collider = GetComponent<CapsuleCollider>();
+        
         _targetVignette = 0.27f;
         _speed = 200f;
         _cameraPos = .75f;
@@ -51,54 +41,68 @@ public class PlayerController : MonoBehaviour
         _rb = GetComponent<Rigidbody>();
     }
 
-    private void OnEnable()
+    public void ToggleCrouch(InputAction.CallbackContext context)
     {
-        _iMove.Enable();
-        _iCrouch.Enable();
+        if (Math.Abs(_collider.height - 1) < .1f) MarkStand(context);
+        else Crouch(context);
     }
 
-    private void OnDisable()
-    {
-        _iMove.Disable();
-        _iCrouch.Disable();
-    }
-
-    private void Crouch(InputAction.CallbackContext context)
+    public void Crouch(InputAction.CallbackContext context)
     {
         _cameraPos = .15f;
         _speed = 100f;
 
-        _targetVignette = 0.5f;
+        _targetVignette = Settings.EnableVignette ? 0.5f : 0.27f;
+
+        _collider.height = 1;
+        _collider.center = new Vector3(0, -0.5f, 0);
+    }
+
+    public void MarkStand(InputAction.CallbackContext context)
+    {
+        _willStand = true;
     }
     
-    private void Stand(InputAction.CallbackContext context)
+    public void Stand()
     {
         _cameraPos = .75f;
         _speed = 200f;
 
         _targetVignette = 0.27f;
+        
+        _collider.height = 2;
+        _collider.center = Vector3.zero;
     }
 
     private void Update()
     {
-
-        _vignette.intensity.value = Mathf.Lerp(_vignette.intensity.value, _targetVignette, 15f * Time.deltaTime);
-        
-        var targetMouseDelta = Mouse.current.delta.ReadValue() * Time.deltaTime;
-        
-        _cameraPitch -= targetMouseDelta.y * MouseSensitivity;
-        _cameraPitch = Mathf.Clamp(_cameraPitch, -60.0f, 60.0f);
-        
-        CameraTransform.localEulerAngles = Vector3.right * _cameraPitch;
-        transform.Rotate(Vector3.up * (targetMouseDelta.x * MouseSensitivity));
+        UpdateCamera();
+        UpdatePostProcessing();
     }
-    
+
     private void FixedUpdate()
     {
-        _counter += Time.fixedDeltaTime;
-        _rb.velocity = transform.TransformDirection(_iMove.ReadValue<Vector3>() * (_speed * Time.fixedDeltaTime));
+        UpdateMovement();
+        UpdateCrouching();
+        CameraBobbing();
+    }
 
-        if (_rb.velocity == Vector3.zero)
+    private void UpdateCrouching()
+    {
+        var bounds = _collider.bounds;
+        var size = new Vector3(bounds.size.x / 2f - .2f, bounds.size.y, bounds.size.z  - .2f);
+        var raycastHit = Physics.BoxCast(bounds.center, size, Vector3.up, Quaternion.identity, 2f, -1);
+        if (!_willStand || raycastHit) return;
+        
+        Stand();
+        _willStand = false;
+    }
+
+    private void CameraBobbing()
+    {
+        _counter += Time.fixedDeltaTime;
+
+        if (_rb.velocity == Vector3.zero || !Settings.EnableHeadBobbing)
         {
             _sin = Mathf.Lerp(_sin, _cameraPos, Time.fixedDeltaTime * 20f);
             _counter = 0f;
@@ -107,5 +111,26 @@ public class PlayerController : MonoBehaviour
         
         var position = CameraTransform.position;
         CameraTransform.position = new Vector3(position.x, Mathf.Lerp(position.y, _sin, 20f * Time.fixedDeltaTime), position.z);
+    }
+
+    private void UpdateMovement()
+    {
+        _rb.velocity = transform.TransformDirection(ControlsManager.Instance.MovementVector * (_speed * Time.fixedDeltaTime));
+    }
+
+    private void UpdateCamera()
+    {
+        var targetMouseDelta = Mouse.current.delta.ReadValue() * Time.deltaTime;
+        
+        _cameraPitch -= targetMouseDelta.y * (Settings.InvertY ? -1 : 1) * Settings.MouseSensitivityY;
+        _cameraPitch = Mathf.Clamp(_cameraPitch, -70.0f, 70.0f);
+        
+        CameraTransform.localEulerAngles = Vector3.right * _cameraPitch;
+        transform.Rotate(Vector3.up * (targetMouseDelta.x * Settings.MouseSensitivityX));
+    }
+
+    private void UpdatePostProcessing()
+    {
+        _vignette.intensity.value = Mathf.Lerp(_vignette.intensity.value, _targetVignette, 15f * Time.deltaTime);
     }
 }
