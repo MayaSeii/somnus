@@ -96,6 +96,11 @@ namespace Managers
             PauseMenu.SetActive(_isPaused);
             Crosshair.SetActive(!_isPaused);
         }
+
+        public void QuitGame()
+        {
+            Application.Quit();
+        }
         
         #endregion
         
