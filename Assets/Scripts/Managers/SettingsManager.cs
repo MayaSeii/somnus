@@ -7,23 +7,8 @@ namespace Managers
     {
         [field: SerializeField] public GameObject PauseMenu { get; set; }
         [field: SerializeField] public GameObject Crosshair { get; set; }
-    
-        private bool _isPaused;
         
-        #region - Pause Menu -
         
-        public void PauseGame(InputAction.CallbackContext context)
-        {
-            _isPaused = !_isPaused;
-            Time.timeScale = _isPaused ? 0 : 1;
-            Cursor.visible = _isPaused;
-            Cursor.lockState = _isPaused ? CursorLockMode.None : CursorLockMode.Locked;
-            
-            PauseMenu.SetActive(_isPaused);
-            Crosshair.SetActive(!_isPaused);
-        }
-        
-        #endregion
         
         #region - Mouse -
 
@@ -74,6 +59,11 @@ namespace Managers
         public void ToggleMotionBlur(bool toggle)
         {
             UIManager.Instance.ToggleMotionBlur(toggle);
+        }
+
+        public void ToggleFilter(bool toggle)
+        {
+            UIManager.Instance.ToggleFilter(toggle);
         }
         
         #endregion

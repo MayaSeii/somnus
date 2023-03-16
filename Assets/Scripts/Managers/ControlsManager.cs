@@ -63,7 +63,7 @@ namespace Managers
             _iPlayerBlink.canceled += _interfaceManager.StopBlinking;
         
             _iUIPause = _controls.UI.Pause;
-            _iUIPause.performed += _settingsManager.PauseGame;
+            _iUIPause.performed += _interfaceManager.PauseGame;
             
             Cursor.lockState = CursorLockMode.Locked;
         }

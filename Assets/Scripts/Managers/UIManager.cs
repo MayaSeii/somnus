@@ -9,6 +9,21 @@ namespace Managers
     {
         public static UIManager Instance;
 
+        #region - Interface Elements -
+        
+        [field: SerializeField, Header("Interface Elements")] public GameObject Crosshair { get; set; }
+        
+        #endregion
+        
+        #region - VAR Menus -
+        
+        [field: SerializeField, Header("Menus")] public GameObject PauseMenu { get; set; }
+        [field: SerializeField] public GameObject SettingsMenu { get; set; }
+    
+        private bool _isPaused;
+        
+        #endregion
+        
         #region - VAR Blinking & Rest -
     
         [field: SerializeField, Header("Blinking")] public Image BlinkOverlay { get; set; }
@@ -62,6 +77,37 @@ namespace Managers
         }
     
         #endregion
+        
+        #region - Pause Menu -
+        
+        public void PauseGame(InputAction.CallbackContext context)
+        {
+            if (!SettingsMenu.activeInHierarchy) TogglePauseMenu();
+            else ToggleSettings();
+        }
+
+        public void TogglePauseMenu()
+        {
+            _isPaused = !_isPaused;
+            Time.timeScale = _isPaused ? 0 : 1;
+            Cursor.visible = _isPaused;
+            Cursor.lockState = _isPaused ? CursorLockMode.None : CursorLockMode.Locked;
+            
+            PauseMenu.SetActive(_isPaused);
+            Crosshair.SetActive(!_isPaused);
+        }
+        
+        #endregion
+        
+        #region - Settings Menu -
+        
+        public void ToggleSettings()
+        {
+            PauseMenu.SetActive(SettingsMenu.activeInHierarchy);
+            SettingsMenu.SetActive(!SettingsMenu.activeInHierarchy);
+        }
+        
+        #endregion
 
         #region - Blinking & Rest -
     
@@ -95,6 +141,11 @@ namespace Managers
         public void ToggleMotionBlur(bool enableMotionBlur)
         {
             _motionBlur.enabled.value = enableMotionBlur;
+        }
+
+        public void ToggleFilter(bool enableFilter)
+        {
+            _cam.GetComponent<postVHSPro>().enabled = enableFilter;
         }
     
         #endregion

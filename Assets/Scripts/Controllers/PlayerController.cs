@@ -31,7 +31,6 @@ namespace Controllers
     
         #region - VAR Blinking & Rest -
 
-        private float _blinkCounter;
         private float _restAchieved;
         private bool _isBlinking;
     
@@ -74,6 +73,7 @@ namespace Controllers
         [field: SerializeField] public float HeadBobSpeed { get; set; }
     
         private float _sin;
+        private float _headBobCounter;
     
         #endregion
 
@@ -112,7 +112,8 @@ namespace Controllers
     
         private void UpdateMovement()
         {
-            _rb.velocity = transform.TransformDirection(ControlsManager.Instance.MovementVector * (_speed * Time.fixedDeltaTime));
+            var velocity = transform.TransformDirection(ControlsManager.Instance.MovementVector * (_speed * Time.fixedDeltaTime));
+            _rb.velocity = new Vector3(velocity.x, _rb.velocity.y, velocity.z);
         }
 
         private void UpdateCamera()
@@ -164,7 +165,7 @@ namespace Controllers
             _speed = CrouchSpeed;
 
             _collider.height = CrouchColliderHeight;
-            _collider.center = new Vector3(0, (CrouchCameraHeight - ColliderHeight) / 2f, 0);
+            _collider.center = new Vector3(0, (CrouchColliderHeight - ColliderHeight) / 2f, 0);
 
             UIManager.Instance.ToggleCrouchVignette(true);
         }
@@ -185,16 +186,16 @@ namespace Controllers
             UIManager.Instance.ToggleCrouchVignette(false);
         }
 
-        private bool CanStand()
+        private bool HasLowCeilingAbove()
         {
             var bounds = _collider.bounds;
-            var size = new Vector3(bounds.size.x / 2f - .2f, bounds.size.y, bounds.size.z  - .2f);
-            return !Physics.BoxCast(bounds.center, size, Vector3.up, Quaternion.identity, 2f, -1);
+            var size = new Vector3(bounds.size.x / 2f - .2f, bounds.size.y / 2f, bounds.size.z / 2f  - .2f);
+            return Physics.BoxCast(bounds.center, size, Vector3.up, Quaternion.identity, 2f);
         }
 
         private void UpdateCrouching()
         {
-            if (!_willStand || !CanStand()) return;
+            if (!_willStand || HasLowCeilingAbove()) return;
         
             Stand();
             _willStand = false;
@@ -231,17 +232,17 @@ namespace Controllers
     
         private void CameraBobbing()
         {
-            _blinkCounter += Time.fixedDeltaTime;
+            _headBobCounter += Time.fixedDeltaTime;
 
-            if (_rb.velocity == Vector3.zero || !Settings.EnableHeadBobbing)
+            if (_rb.velocity is { x: 0, z: 0 } || !Settings.EnableHeadBobbing)
             {
                 _sin = Mathf.Lerp(_sin, _cameraHeight, Time.fixedDeltaTime * HeadBobSpeed);
-                _blinkCounter = 0f;
+                _headBobCounter = 0f;
             }
-            else _sin = _cameraHeight + HeadBobHeight * Mathf.Sin(HeadBobFrequency * Time.fixedDeltaTime * _blinkCounter);
+            else _sin = _cameraHeight + HeadBobHeight * Mathf.Sin(HeadBobFrequency * Time.fixedDeltaTime * _headBobCounter);
         
-            var position = CameraTransform.position;
-            CameraTransform.position = new Vector3(position.x, Mathf.Lerp(position.y, _sin, HeadBobSpeed * Time.fixedDeltaTime), position.z);
+            var position = CameraTransform.localPosition;
+            CameraTransform.localPosition = new Vector3(position.x, Mathf.Lerp(position.y, _sin, HeadBobSpeed * Time.fixedDeltaTime), position.z);
         }
     
         #endregion
