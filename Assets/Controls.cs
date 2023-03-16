@@ -44,13 +44,40 @@ public partial class @Controls : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Blink"",
+                    ""type"": ""Button"",
+                    ""id"": ""41e9bc69-3cad-4d72-97e1-4037fd9af647"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Lean Left"",
+                    ""type"": ""Button"",
+                    ""id"": ""eb92ed48-754e-4cf5-a612-abdbddab28fa"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Lean Right"",
+                    ""type"": ""Button"",
+                    ""id"": ""a12672c4-b71c-4567-b93f-0aa434f913b0"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
                 {
                     ""name"": ""3D Vector"",
                     ""id"": ""65c9c1bb-05d9-44bf-848a-b2cc8f4a4304"",
-                    ""path"": ""3DVector"",
+                    ""path"": ""3DVector(mode=1)"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -134,6 +161,39 @@ public partial class @Controls : IInputActionCollection2, IDisposable
                     ""action"": ""Crouch"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""ab4d31a3-c12a-4c34-b90b-35918b52c9d0"",
+                    ""path"": ""<Keyboard>/c"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Blink"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""6c0a4ec8-9e5a-4a90-96c0-57ae20360ec5"",
+                    ""path"": ""<Keyboard>/e"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Lean Right"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""e29b0ff2-a584-43b8-9378-60a12e3a98b3"",
+                    ""path"": ""<Keyboard>/q"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""KeyboardMouse"",
+                    ""action"": ""Lean Left"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -189,6 +249,9 @@ public partial class @Controls : IInputActionCollection2, IDisposable
         m_Player = asset.FindActionMap("Player", throwIfNotFound: true);
         m_Player_Move = m_Player.FindAction("Move", throwIfNotFound: true);
         m_Player_Crouch = m_Player.FindAction("Crouch", throwIfNotFound: true);
+        m_Player_Blink = m_Player.FindAction("Blink", throwIfNotFound: true);
+        m_Player_LeanLeft = m_Player.FindAction("Lean Left", throwIfNotFound: true);
+        m_Player_LeanRight = m_Player.FindAction("Lean Right", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Pause = m_UI.FindAction("Pause", throwIfNotFound: true);
@@ -253,12 +316,18 @@ public partial class @Controls : IInputActionCollection2, IDisposable
     private IPlayerActions m_PlayerActionsCallbackInterface;
     private readonly InputAction m_Player_Move;
     private readonly InputAction m_Player_Crouch;
+    private readonly InputAction m_Player_Blink;
+    private readonly InputAction m_Player_LeanLeft;
+    private readonly InputAction m_Player_LeanRight;
     public struct PlayerActions
     {
         private @Controls m_Wrapper;
         public PlayerActions(@Controls wrapper) { m_Wrapper = wrapper; }
         public InputAction @Move => m_Wrapper.m_Player_Move;
         public InputAction @Crouch => m_Wrapper.m_Player_Crouch;
+        public InputAction @Blink => m_Wrapper.m_Player_Blink;
+        public InputAction @LeanLeft => m_Wrapper.m_Player_LeanLeft;
+        public InputAction @LeanRight => m_Wrapper.m_Player_LeanRight;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -274,6 +343,15 @@ public partial class @Controls : IInputActionCollection2, IDisposable
                 @Crouch.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnCrouch;
                 @Crouch.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnCrouch;
                 @Crouch.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnCrouch;
+                @Blink.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnBlink;
+                @Blink.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnBlink;
+                @Blink.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnBlink;
+                @LeanLeft.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnLeanLeft;
+                @LeanLeft.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnLeanLeft;
+                @LeanLeft.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnLeanLeft;
+                @LeanRight.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnLeanRight;
+                @LeanRight.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnLeanRight;
+                @LeanRight.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnLeanRight;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -284,6 +362,15 @@ public partial class @Controls : IInputActionCollection2, IDisposable
                 @Crouch.started += instance.OnCrouch;
                 @Crouch.performed += instance.OnCrouch;
                 @Crouch.canceled += instance.OnCrouch;
+                @Blink.started += instance.OnBlink;
+                @Blink.performed += instance.OnBlink;
+                @Blink.canceled += instance.OnBlink;
+                @LeanLeft.started += instance.OnLeanLeft;
+                @LeanLeft.performed += instance.OnLeanLeft;
+                @LeanLeft.canceled += instance.OnLeanLeft;
+                @LeanRight.started += instance.OnLeanRight;
+                @LeanRight.performed += instance.OnLeanRight;
+                @LeanRight.canceled += instance.OnLeanRight;
             }
         }
     }
@@ -334,6 +421,9 @@ public partial class @Controls : IInputActionCollection2, IDisposable
     {
         void OnMove(InputAction.CallbackContext context);
         void OnCrouch(InputAction.CallbackContext context);
+        void OnBlink(InputAction.CallbackContext context);
+        void OnLeanLeft(InputAction.CallbackContext context);
+        void OnLeanRight(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {
