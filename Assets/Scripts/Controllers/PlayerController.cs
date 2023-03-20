@@ -76,6 +76,20 @@ namespace Controllers
         private float _headBobCounter;
     
         #endregion
+        
+        #region - VAR Watch -
+        
+        [field: SerializeField, Header("Wrist Watch")] public Transform Arm { get; set; }
+        [field: SerializeField] public Vector3 RestingArmPosition { get; set; }
+        [field: SerializeField] public Vector3 RestingArmRotation { get; set; }
+        [field: SerializeField] public Vector3 ActiveArmPosition { get; set; }
+        [field: SerializeField] public Vector3 ActiveArmRotation { get; set; }
+
+        private Vector3 _targetArmRotation;
+        private Vector3 _targetArmPosition;
+        private bool _isLookingAtArm;
+        
+        #endregion
 
         #region - UNITY Start -
     
@@ -86,6 +100,9 @@ namespace Controllers
         
             _speed = Speed;
             _cameraHeight = CameraHeight;
+            
+            _targetArmRotation = RestingArmRotation;
+            _targetArmPosition = RestingArmPosition;
         }
     
         #endregion
@@ -104,6 +121,7 @@ namespace Controllers
             UpdateMovement();
             UpdateCrouching();
             CameraBobbing();
+            UpdateWatchArm();
         }
     
         #endregion
@@ -245,6 +263,27 @@ namespace Controllers
             CameraTransform.localPosition = new Vector3(position.x, Mathf.Lerp(position.y, _sin, HeadBobSpeed * Time.fixedDeltaTime), position.z);
         }
     
+        #endregion
+        
+        #region - Watch -
+        
+        public void ToggleWatch(InputAction.CallbackContext context)
+        {
+            _isLookingAtArm = !_isLookingAtArm;
+            
+            _targetArmRotation = _isLookingAtArm ? ActiveArmRotation : RestingArmRotation;
+            _targetArmPosition = _isLookingAtArm ? ActiveArmPosition : RestingArmPosition;
+            
+            UIManager.Instance.ToggleDoF(_isLookingAtArm);
+        }
+
+        private void UpdateWatchArm()
+        {
+            var pos = new Vector3(_targetArmPosition.x, _targetArmPosition.y, _targetArmPosition.z);
+            Arm.localPosition = Vector3.Lerp(Arm.localPosition, pos, (_isLookingAtArm ? 12f : 4f) * Time.fixedDeltaTime);
+            Arm.localRotation = Quaternion.Slerp(Arm.localRotation, Quaternion.Euler(_targetArmRotation), 7f * Time.fixedDeltaTime);
+        }
+        
         #endregion
     }
 }

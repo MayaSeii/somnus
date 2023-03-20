@@ -1,15 +1,9 @@
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 namespace Managers
 {
     public class SettingsManager : MonoBehaviour
     {
-        [field: SerializeField] public GameObject PauseMenu { get; set; }
-        [field: SerializeField] public GameObject Crosshair { get; set; }
-        
-        
-        
         #region - Mouse -
 
         public void ChangeSensitivityX(float value)
@@ -64,6 +58,11 @@ namespace Managers
         public void ToggleFilter(bool toggle)
         {
             UIManager.Instance.ToggleFilter(toggle);
+        }
+        
+        public void ToggleDoF(bool toggle)
+        {
+            UIManager.Instance.ToggleDoFSetting(toggle);
         }
         
         #endregion

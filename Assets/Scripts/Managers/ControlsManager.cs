@@ -8,9 +8,7 @@ namespace Managers
     {
         public static ControlsManager Instance;
 
-        private SettingsManager _settingsManager;
         private UIManager _interfaceManager;
-    
         private Controls _controls;
         
         #region - VAR Player Inputs -
@@ -23,6 +21,7 @@ namespace Managers
         private InputAction _iPlayerLeanLeft;
         private InputAction _iPlayerLeanRight;
         private InputAction _iPlayerBlink;
+        private InputAction _iPlayerWatch;
         
         #endregion
 
@@ -37,7 +36,6 @@ namespace Managers
         private void Awake()
         {
             Instance = this;
-            _settingsManager = GetComponent<SettingsManager>();
             _interfaceManager = GetComponent<UIManager>();
         
             _controls = new Controls();
@@ -61,7 +59,11 @@ namespace Managers
             _iPlayerBlink.started += _interfaceManager.Blink;
             _iPlayerBlink.canceled += Player.StopBlinking;
             _iPlayerBlink.canceled += _interfaceManager.StopBlinking;
-        
+
+            _iPlayerWatch = _controls.Player.Watch;
+            _iPlayerWatch.started += Player.ToggleWatch;
+            _iPlayerWatch.canceled += Player.ToggleWatch;
+            
             _iUIPause = _controls.UI.Pause;
             _iUIPause.performed += _interfaceManager.PauseGame;
             
@@ -79,6 +81,7 @@ namespace Managers
             _iPlayerLeanLeft.Enable();
             _iPlayerLeanRight.Enable();
             _iPlayerBlink.Enable();
+            _iPlayerWatch.Enable();
         
             _iUIPause.Enable();
         }
@@ -90,6 +93,7 @@ namespace Managers
             _iPlayerLeanLeft.Disable();
             _iPlayerLeanRight.Disable();
             _iPlayerBlink.Disable();
+            _iPlayerWatch.Disable();
         
             _iUIPause.Disable();
         }

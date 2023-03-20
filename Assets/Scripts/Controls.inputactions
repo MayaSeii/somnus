@@ -49,6 +49,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "Watch",
+                    "type": "Button",
+                    "id": "a273a7cb-6764-4ef8-89b2-c948caca40d2",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -170,6 +179,17 @@
                     "processors": "",
                     "groups": "KeyboardMouse",
                     "action": "Lean Left",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "0a4658ea-6523-41b3-8fed-421119cfb7d4",
+                    "path": "<Mouse>/rightButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Watch",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

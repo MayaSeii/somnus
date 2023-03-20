@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Rendering.PostProcessing;
@@ -28,6 +29,7 @@ namespace Managers
     
         [field: SerializeField, Header("Blinking")] public Image BlinkOverlay { get; set; }
         [field: SerializeField] public Slider RestMeter { get; set; }
+        [field: SerializeField] public Slider ArmRestMeter { get; set; }
 
         private float _targetBlinkOpacity;
     
@@ -35,12 +37,18 @@ namespace Managers
     
         #region - VAR Post-Processing -
     
+        [field: SerializeField, Header("Post-Processing")] public Transform ArmCam { get; set; }
+        
+        private Transform _cam;
+        
         private PostProcessVolume _postProcessVolume;
         private Vignette _vignette;
         private MotionBlur _motionBlur;
-        private Camera _cam;
+        private DepthOfField _depthOfField;
     
         private float _targetVignette;
+        private float _targetDoF;
+        private float _dynamicDoFDistance;
     
         #endregion
 
@@ -57,12 +65,18 @@ namespace Managers
 
         private void Start()
         {
-            _cam = Camera.main;
+            if (Camera.main != null) _cam = Camera.main.transform;
+            
             _postProcessVolume = _cam != null ? _cam.GetComponent<PostProcessVolume>() : null;
             if (_postProcessVolume != null) _postProcessVolume.profile.TryGetSettings(out _vignette);
             if (_postProcessVolume != null) _postProcessVolume.profile.TryGetSettings(out _motionBlur);
+            if (_postProcessVolume != null) _postProcessVolume.profile.TryGetSettings(out _depthOfField);
+            
             _targetVignette = 0.27f;
-        
+            _targetDoF = -1f;
+
+            var cursorTexture = Resources.Load<Texture2D>("Sprites/Cursor");
+            Cursor.SetCursor(cursorTexture, Vector2.zero, CursorMode.Auto);
             Cursor.visible = false;
         }
     
@@ -74,6 +88,7 @@ namespace Managers
         {
             BlinkOverlay.color = new Color(0f, 0f, 0f, Mathf.Lerp(BlinkOverlay.color.a, _targetBlinkOpacity, 20f * Time.deltaTime));
             _vignette.intensity.value = Mathf.Lerp(_vignette.intensity.value, _targetVignette, 15f * Time.deltaTime);
+            _depthOfField.focusDistance.value = Mathf.Lerp(_depthOfField.focusDistance.value, Math.Abs(_targetDoF + 1f) < .1f ? CalculateDoFDistance() : _targetDoF, 15 * Time.deltaTime);
         }
     
         #endregion
@@ -131,6 +146,7 @@ namespace Managers
         public void UpdateRestMeter(float value)
         {
             RestMeter.value = Mathf.Clamp(value, RestMeter.minValue, RestMeter.maxValue);
+            ArmRestMeter.value = Mathf.Clamp(value, RestMeter.minValue, RestMeter.maxValue);
         }
     
         #endregion
@@ -150,7 +166,24 @@ namespace Managers
 
         public void ToggleFilter(bool enableFilter)
         {
-            _cam.GetComponent<postVHSPro>().enabled = enableFilter;
+            ArmCam.GetComponent<postVHSPro>().enabled = enableFilter;
+        }
+
+        public void ToggleDoF(bool enableDoF)
+        {
+            if (enableDoF) _targetDoF = 0.6f;
+            else _targetDoF = -1f;
+        }
+
+        public void ToggleDoFSetting(bool enableDoF)
+        {
+            _depthOfField.enabled.value = enableDoF;
+        }
+
+        private float CalculateDoFDistance()
+        {
+            Physics.Raycast(_cam.transform.position, _cam.forward, out var ray, 100.0f, ~LayerMask.GetMask("Player"));
+            return ray.Equals(null) ? 100f : ray.distance;
         }
     
         #endregion
