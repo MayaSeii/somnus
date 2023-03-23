@@ -5,6 +5,8 @@ TagManager:
   serializedVersion: 2
   tags:
   - Room Area
+  - Ceiling Lamp
+  - Light Switch
   layers:
   - Default
   - TransparentFX

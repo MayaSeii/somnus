@@ -131,12 +131,19 @@ namespace Controllers
         private void OnTriggerEnter(Collider other)
         {
             if (other.CompareTag("Room Area")) EnterRoomArea(other);
+            if (other.CompareTag("Light Switch")) FlipSwitch(other);
         }
 
         private static void EnterRoomArea(Component other)
         {
             var roomController = other.transform.GetComponentInParent<RoomController>();
             DebugManager.Instance.UpdateCurrentRoom(roomController.RoomName);
+        }
+
+        private static void FlipSwitch(Component other)
+        {
+            var lightSwitch = other.GetComponent<LightSwitch>();
+            lightSwitch.Flip();
         }
 
         #endregion
