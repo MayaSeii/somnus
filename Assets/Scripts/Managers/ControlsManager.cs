@@ -9,6 +9,7 @@ namespace Managers
         public static ControlsManager Instance;
 
         private UIManager _interfaceManager;
+        private DebugManager _debugManager;
         private Controls _controls;
         
         #region - VAR Player Inputs -
@@ -28,6 +29,7 @@ namespace Managers
         #region - VAR UI Inputs -
         
         private InputAction _iUIPause;
+        private InputAction _iUIDebugInfo;
         
         #endregion
 
@@ -37,6 +39,7 @@ namespace Managers
         {
             Instance = this;
             _interfaceManager = GetComponent<UIManager>();
+            _debugManager = GetComponent<DebugManager>();
         
             _controls = new Controls();
 
@@ -66,6 +69,9 @@ namespace Managers
             
             _iUIPause = _controls.UI.Pause;
             _iUIPause.performed += _interfaceManager.PauseGame;
+
+            _iUIDebugInfo = _controls.UI.DebugInfo;
+            _iUIDebugInfo.performed += _debugManager.ToggleDebugInfo;
             
             Cursor.lockState = CursorLockMode.Locked;
         }
@@ -84,6 +90,7 @@ namespace Managers
             _iPlayerWatch.Enable();
         
             _iUIPause.Enable();
+            _iUIDebugInfo.Enable();
         }
 
         private void OnDisable()
@@ -96,6 +103,7 @@ namespace Managers
             _iPlayerWatch.Disable();
         
             _iUIPause.Disable();
+            _iUIDebugInfo.Disable();
         }
         
         #endregion

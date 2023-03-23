@@ -125,6 +125,21 @@ namespace Controllers
         }
     
         #endregion
+        
+        #region - UNITY Triggers -
+
+        private void OnTriggerEnter(Collider other)
+        {
+            if (other.CompareTag("Room Area")) EnterRoomArea(other);
+        }
+
+        private static void EnterRoomArea(Component other)
+        {
+            var roomController = other.transform.GetComponentInParent<RoomController>();
+            DebugManager.Instance.UpdateCurrentRoom(roomController.RoomName);
+        }
+
+        #endregion
     
         #region - Movement & Looking -
     

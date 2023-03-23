@@ -38,6 +38,7 @@ namespace Managers
         #region - VAR Post-Processing -
     
         [field: SerializeField, Header("Post-Processing")] public Transform ArmCam { get; set; }
+        [field: SerializeField, Header("Post-Processing")] public LayerMask DepthLayerMask { get; set; }
         
         private Transform _cam;
         
@@ -182,7 +183,7 @@ namespace Managers
 
         private float CalculateDoFDistance()
         {
-            Physics.Raycast(_cam.transform.position, _cam.forward, out var ray, 100.0f, ~LayerMask.GetMask("Player"));
+            Physics.Raycast(_cam.transform.position, _cam.forward, out var ray, 100.0f, DepthLayerMask);
             return ray.Equals(null) ? 100f : ray.distance;
         }
     
