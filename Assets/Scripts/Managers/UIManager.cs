@@ -38,7 +38,7 @@ namespace Managers
         #region - VAR Post-Processing -
     
         [field: SerializeField, Header("Post-Processing")] public Transform ArmCam { get; set; }
-        [field: SerializeField, Header("Post-Processing")] public LayerMask DepthLayerMask { get; set; }
+        [field: SerializeField] public LayerMask DepthLayerMask { get; set; }
         
         private Transform _cam;
         
@@ -46,6 +46,7 @@ namespace Managers
         private Vignette _vignette;
         private MotionBlur _motionBlur;
         private DepthOfField _depthOfField;
+        private PSXEffects _psxEffects;
     
         private float _targetVignette;
         private float _targetDoF;
@@ -72,6 +73,7 @@ namespace Managers
             if (_postProcessVolume != null) _postProcessVolume.profile.TryGetSettings(out _vignette);
             if (_postProcessVolume != null) _postProcessVolume.profile.TryGetSettings(out _motionBlur);
             if (_postProcessVolume != null) _postProcessVolume.profile.TryGetSettings(out _depthOfField);
+            _psxEffects = ArmCam.GetComponent<PSXEffects>();
             
             _targetVignette = 0.27f;
             _targetDoF = -1f;
@@ -185,6 +187,11 @@ namespace Managers
         {
             Physics.Raycast(_cam.transform.position, _cam.forward, out var ray, 100.0f, DepthLayerMask);
             return ray.Equals(null) ? 100f : ray.distance;
+        }
+        
+        public void TogglePsx(bool enablePsx)
+        {
+            _psxEffects.enabled = enablePsx;
         }
     
         #endregion

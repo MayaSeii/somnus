@@ -65,6 +65,11 @@ namespace Managers
             UIManager.Instance.ToggleDoFSetting(toggle);
         }
         
+        public void TogglePsx(bool toggle)
+        {
+            UIManager.Instance.TogglePsx(toggle);
+        }
+        
         #endregion
     }
 }
