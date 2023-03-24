@@ -17,6 +17,9 @@ public class LightSwitch : Interactable
     {
         _state = !_state;
         _associatedLights.ForEach(l => l.gameObject.SetActive(_state));
-        transform.GetChild(1).rotation = Quaternion.Euler(_state ? -90 : 90, 0, 90);
+        
+        Transform trans;
+        (trans = transform).GetChild(1).rotation = Quaternion.Euler(_state ? -90 : 90, 0, 90);
+        AudioManager.Instance.PlayOneShot(_state ? FMODEvents.Instance.LightSwitchOn : FMODEvents.Instance.LightSwitchOff, trans.position);
     }
 }

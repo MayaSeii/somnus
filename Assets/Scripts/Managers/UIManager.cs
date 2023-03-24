@@ -10,9 +10,10 @@ namespace Managers
     {
         public static UIManager Instance;
 
-        #region - Interface Elements -
+        #region - VAR Interface Elements -
         
         [field: SerializeField, Header("Interface Elements")] public GameObject Crosshair { get; set; }
+        [field: SerializeField] public GameObject InteractionCircle { get; set; }
         
         #endregion
         
@@ -152,6 +153,16 @@ namespace Managers
             ArmRestMeter.value = Mathf.Clamp(value, RestMeter.minValue, RestMeter.maxValue);
         }
     
+        #endregion
+        
+        #region - Interacting -
+
+        public void ToggleInteractionCircle(bool toggle)
+        {
+            InteractionCircle.SetActive(toggle);
+            Crosshair.SetActive(!toggle);
+        }
+        
         #endregion
 
         #region - Post-Processing -

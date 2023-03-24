@@ -4,6 +4,9 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using Quaternion = UnityEngine.Quaternion;
 using Vector3 = UnityEngine.Vector3;
+using FMOD.Studio;
+using FMODUnity;
+using STOP_MODE = FMOD.Studio.STOP_MODE;
 
 namespace Controllers
 {
@@ -18,6 +21,8 @@ namespace Controllers
     
         private float _cameraHeight;
         private float _speed;
+
+        private EventInstance _footstepsInstance;
     
         #endregion
         
@@ -112,6 +117,9 @@ namespace Controllers
             
             _targetArmRotation = RestingArmRotation;
             _targetArmPosition = RestingArmPosition;
+
+            _footstepsInstance = AudioManager.Instance.CreateEventInstance(FMODEvents.Instance.Footsteps);
+            RuntimeManager.AttachInstanceToGameObject(_footstepsInstance, transform, _rb);
         }
     
         #endregion
@@ -122,6 +130,7 @@ namespace Controllers
         {
             UpdateRest();
             UpdateInteractionArea();
+            UpdateSounds();
         }
 
         private void LateUpdate()
@@ -322,12 +331,30 @@ namespace Controllers
             Physics.Raycast(CameraTransform.position, CameraTransform.forward, out var ray, InteractionDistance, InteractionLayerMask);
             _interactableInRange = ray.distance > 0 ? ray.collider : null;
             DebugManager.Instance.UpdateCurrentInteractable(ray.distance > 0 ? ray.collider.name : "None");
+            UIManager.Instance.ToggleInteractionCircle(ray.distance > 0);
         }
 
         public void Interact(InputAction.CallbackContext context)
         {
             if (!_interactableInRange) return;
             _interactableInRange.GetComponent<Interactable>().Interact();
+        }
+        
+        #endregion
+        
+        #region - Sounds -
+
+        private void UpdateSounds()
+        {
+            if (ControlsManager.Instance.MovementVector != Vector3.zero)
+            {
+                _footstepsInstance.getPlaybackState(out var playbackState);
+                if (playbackState.Equals(PLAYBACK_STATE.STOPPED)) _footstepsInstance.start();
+            }
+            else
+            {
+                _footstepsInstance.stop(STOP_MODE.ALLOWFADEOUT);
+            }
         }
         
         #endregion

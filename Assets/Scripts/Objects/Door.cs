@@ -20,5 +20,7 @@ public class Door : Interactable
         var direction = transform.InverseTransformPoint(_player.position).x > 0 ? "Front" : "Back";
         _animator.Play(_isOpen ? $"Door Open {direction}" : $"Door Close {_closeDirection}", 0, 0);
         _closeDirection = direction;
+        
+        AudioManager.Instance.PlayOneShot(_isOpen ? FMODEvents.Instance.DoorOpen : FMODEvents.Instance.DoorClose, transform.position);
     }
 }
