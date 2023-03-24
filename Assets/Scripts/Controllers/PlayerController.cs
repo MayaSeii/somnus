@@ -112,6 +112,10 @@ namespace Controllers
         private void Update()
         {
             UpdateRest();
+        }
+
+        private void LateUpdate()
+        {
             UpdateCamera();
         }
 
@@ -132,6 +136,7 @@ namespace Controllers
         {
             if (other.CompareTag("Room Area")) EnterRoomArea(other);
             if (other.CompareTag("Light Switch")) FlipSwitch(other);
+            if (other.CompareTag("Door")) OpenDoor(other);
         }
 
         private static void EnterRoomArea(Component other)
@@ -144,6 +149,12 @@ namespace Controllers
         {
             var lightSwitch = other.GetComponent<LightSwitch>();
             lightSwitch.Flip();
+        }
+
+        private static void OpenDoor(Component other)
+        {
+            var door = other.GetComponent<Door>();
+            door.Interact();
         }
 
         #endregion

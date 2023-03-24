@@ -7,6 +7,7 @@ TagManager:
   - Room Area
   - Ceiling Lamp
   - Light Switch
+  - Door
   layers:
   - Default
   - TransparentFX
