@@ -1,9 +1,8 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using FMODUnity;
 using FMOD.Studio;
+using Debug = UnityEngine.Debug;
 
 public class AudioManager : MonoBehaviour
 {
@@ -17,6 +16,19 @@ public class AudioManager : MonoBehaviour
         Instance = this;
 
         _eventInstances = new List<EventInstance>();
+    }
+
+    private void Start()
+    {
+        InitialiseAmbience(FMODEvents.Instance.LightHum);
+        InitialiseAmbience(FMODEvents.Instance.DeepHum);
+    }
+
+    private void InitialiseAmbience(EventReference sound)
+    {
+        var instance = CreateEventInstance(sound);
+        RuntimeManager.AttachInstanceToGameObject(instance, GameObject.FindWithTag("Player").transform);
+        instance.start();
     }
 
     public void PlayOneShot(EventReference sound, Vector3 worldPos)
