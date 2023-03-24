@@ -8,6 +8,7 @@ TagManager:
   - Ceiling Lamp
   - Light Switch
   - Door
+  - Interactable
   layers:
   - Default
   - TransparentFX
@@ -19,7 +20,7 @@ TagManager:
   - Player
   - Arm
   - Room Areas
-  - 
+  - Interactable
   - 
   - 
   - 

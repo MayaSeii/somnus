@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using Controllers;
 using UnityEngine;
 
-public class LightSwitch : MonoBehaviour
+public class LightSwitch : Interactable
 {
     private List<Light> _associatedLights;
     private bool _state;
@@ -13,7 +13,7 @@ public class LightSwitch : MonoBehaviour
         _state = true;
     }
 
-    public void Flip()
+    public override void Interact()
     {
         _state = !_state;
         _associatedLights.ForEach(l => l.gameObject.SetActive(_state));

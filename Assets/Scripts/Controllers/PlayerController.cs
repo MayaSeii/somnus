@@ -77,6 +77,15 @@ namespace Controllers
     
         #endregion
         
+        #region - VAR Interacting -
+
+        [field: SerializeField, Header("Interacting")] public LayerMask InteractionLayerMask { get; set; }
+        [field: SerializeField] public float InteractionDistance { get; set; }
+        
+        private Collider _interactableInRange;
+        
+        #endregion
+        
         #region - VAR Watch -
         
         [field: SerializeField, Header("Wrist Watch")] public Transform Arm { get; set; }
@@ -112,6 +121,7 @@ namespace Controllers
         private void Update()
         {
             UpdateRest();
+            UpdateInteractionArea();
         }
 
         private void LateUpdate()
@@ -135,26 +145,12 @@ namespace Controllers
         private void OnTriggerEnter(Collider other)
         {
             if (other.CompareTag("Room Area")) EnterRoomArea(other);
-            if (other.CompareTag("Light Switch")) FlipSwitch(other);
-            if (other.CompareTag("Door")) OpenDoor(other);
         }
 
         private static void EnterRoomArea(Component other)
         {
             var roomController = other.transform.GetComponentInParent<RoomController>();
             DebugManager.Instance.UpdateCurrentRoom(roomController.RoomName);
-        }
-
-        private static void FlipSwitch(Component other)
-        {
-            var lightSwitch = other.GetComponent<LightSwitch>();
-            lightSwitch.Flip();
-        }
-
-        private static void OpenDoor(Component other)
-        {
-            var door = other.GetComponent<Door>();
-            door.Interact();
         }
 
         #endregion
@@ -315,6 +311,23 @@ namespace Controllers
             var pos = new Vector3(_targetArmPosition.x, _targetArmPosition.y, _targetArmPosition.z);
             Arm.localPosition = Vector3.Lerp(Arm.localPosition, pos, (_isLookingAtArm ? 12f : 4f) * Time.fixedDeltaTime);
             Arm.localRotation = Quaternion.Slerp(Arm.localRotation, Quaternion.Euler(_targetArmRotation), 7f * Time.fixedDeltaTime);
+        }
+        
+        #endregion
+        
+        #region - Interacting -
+
+        private void UpdateInteractionArea()
+        {
+            Physics.Raycast(CameraTransform.position, CameraTransform.forward, out var ray, InteractionDistance, InteractionLayerMask);
+            _interactableInRange = ray.distance > 0 ? ray.collider : null;
+            DebugManager.Instance.UpdateCurrentInteractable(ray.distance > 0 ? ray.collider.name : "None");
+        }
+
+        public void Interact(InputAction.CallbackContext context)
+        {
+            if (!_interactableInRange) return;
+            _interactableInRange.GetComponent<Interactable>().Interact();
         }
         
         #endregion

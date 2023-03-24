@@ -23,6 +23,7 @@ namespace Managers
         private InputAction _iPlayerLeanRight;
         private InputAction _iPlayerBlink;
         private InputAction _iPlayerWatch;
+        private InputAction _iPlayerInteract;
         
         #endregion
 
@@ -66,6 +67,9 @@ namespace Managers
             _iPlayerWatch = _controls.Player.Watch;
             _iPlayerWatch.started += Player.ToggleWatch;
             _iPlayerWatch.canceled += Player.ToggleWatch;
+
+            _iPlayerInteract = _controls.Player.Interact;
+            _iPlayerInteract.started += Player.Interact;
             
             _iUIPause = _controls.UI.Pause;
             _iUIPause.performed += _interfaceManager.PauseGame;
@@ -88,6 +92,7 @@ namespace Managers
             _iPlayerLeanRight.Enable();
             _iPlayerBlink.Enable();
             _iPlayerWatch.Enable();
+            _iPlayerInteract.Enable();
         
             _iUIPause.Enable();
             _iUIDebugInfo.Enable();
@@ -101,6 +106,7 @@ namespace Managers
             _iPlayerLeanRight.Disable();
             _iPlayerBlink.Disable();
             _iPlayerWatch.Disable();
+            _iPlayerInteract.Disable();
         
             _iUIPause.Disable();
             _iUIDebugInfo.Disable();

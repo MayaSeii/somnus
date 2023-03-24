@@ -12,6 +12,7 @@ namespace Managers
     
         [field: SerializeField] public GameObject DebugInfo { get; set; }
         [field: SerializeField] public TMP_Text CurrentRoomText { get; set; }
+        [field: SerializeField] public TMP_Text CurrentInteractableText { get; set; }
     
         #endregion
     
@@ -34,6 +35,11 @@ namespace Managers
         public void UpdateCurrentRoom(string text)
         {
             CurrentRoomText.text = text;
+        }
+        
+        public void UpdateCurrentInteractable(string text)
+        {
+            CurrentInteractableText.text = text;
         }
     
         #endregion
