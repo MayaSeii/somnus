@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Controllers;
 using UnityEngine;
 using Image = UnityEngine.UI.Image;
@@ -7,52 +8,85 @@ namespace Objects
 {
     public abstract class Interactable : MonoBehaviour
     {
-        [field: SerializeField] public Renderer MainRenderer { get; set; }
+        #region - VAR Components -
         
-        protected Image InteractableIcon;
+        [field: SerializeField] public Renderer MainRenderer { get; set; }
         
         private Camera _camera;
         private PlayerController _playerCon;
-        private Collider _collider;
         private Transform _interactionPoint;
+        private Collider _collider;
+        
+        #endregion
+        
+        #region - VAR UI Elements -
+        
+        protected Image InteractionCircle;
+        private Image _interactionArrow;
+        
+        private float _targetCircleAlpha;
+        private float _currentCircleAlpha;
+        
+        private float _targetArrowAlpha;
+        private float _currentArrowAlpha;
+        
+        #endregion
+
+        #region - UNITY Awake -
         
         private void Awake()
         {
             _camera = Camera.main;
             _playerCon = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
-            _collider = GetComponent<Collider>();
-            
-            InteractableIcon = new GameObject { name = "Interactable Icon" }.AddComponent<Image>();
-            InteractableIcon.transform.SetParent(GameObject.FindWithTag("UI Canvas").transform);
-            InteractableIcon.sprite = Resources.Load<Sprite>("Sprites/InteractionCircleEmpty");
-            InteractableIcon.enabled = false;
-            InteractableIcon.gameObject.layer = LayerMask.NameToLayer("UI");
-
             _interactionPoint = transform.GetChild(0).CompareTag("Interaction Point") ? transform.GetChild(0) : transform;
+            _collider = GetComponent<Collider>();
+
+            CreateInteractionCircle();
+            CreateInteractionArrow();
         }
+        
+        #endregion
+        
+        #region - UNITY Start -
 
         protected void Start()
         {
-            PrepareIcon();
+            InitialiseInteractionCircle();
+            InitialiseInteractionArrow();
         }
+        
+        #endregion
+        
+        #region - UNITY Updates -
 
-        public abstract void Interact();
+        private void Update()
+        {
+            UpdateInteractionCircleColour();
+            UpdateInteractionArrowColour();
+        }
 
         private void LateUpdate()
         {
-            UpdateIcon();
+            UpdateInteractionCirclePosition();
+            _targetArrowAlpha = 0f;
+
+            var showArrow = false;
             
             var vpPos = _camera.WorldToViewportPoint(_interactionPoint.position);
             
             if (vpPos.x is < 0f or > 1f || vpPos.y is < 0f or > 1f || vpPos.z <= 0f)
             {
-                InteractableIcon.enabled = false;
-                return;
+                _targetCircleAlpha = 0f;
+                showArrow = DistanceToPlayer() < 10;
+            }
+            else
+            {
+                _interactionArrow.enabled = false;
             }
 
-            if (DistanceToPlayer() > 10)
+            if (!showArrow && DistanceToPlayer() > 10)
             {
-                InteractableIcon.enabled = false;
+                _targetCircleAlpha = 0f;
                 return;
             }
 
@@ -60,23 +94,150 @@ namespace Objects
             
             GetBoundCorners().ForEach(c =>
             {
-                if (Physics.Raycast(_camera.transform.position, c - _camera.transform.position, out var raycastHit, 1000, LayerMask.GetMask("Walls", "Interactable")))
-                    raycastHits.Add(raycastHit);
+                var origin = _playerCon.GetCameraAbsolutePosition();
+                var direction = c - origin;
+                var layerMask = LayerMask.GetMask("Walls", "Interactable");
+                var interactableLayer = LayerMask.NameToLayer("Interactable");
+                
+                if (!Physics.Raycast(origin, direction, out var raycastHit, 10, layerMask)) return;
+                if (raycastHit.collider.gameObject.layer == interactableLayer) raycastHits.Add(raycastHit);
             });
 
-            var visible = false;
+            var enable = raycastHits.Any(r => r.transform == transform);
             
-            raycastHits.ForEach(r =>
+            if (!showArrow)
             {
-                if (r.transform == transform)
-                {
-                    visible = true;
-                }
-            });
+                _targetCircleAlpha = enable ? (DistanceToPlayer() - 10f) / -5f : 0f;
+            }
+            else if (enable)
+            {
+                _targetArrowAlpha = (DistanceToPlayer() - 10f) / -5f;
+                UpdateInteractionArrowPosition();
+            }
+            else
+            {
+                _targetArrowAlpha = 0f;
+            }
+        }
+        
+        #endregion
 
-            InteractableIcon.enabled = visible;
+        #region - Abstractions -
+        
+        public abstract void Interact();
+        
+        #endregion
+        
+        #region - Creating Interaction UI -
+
+        private void CreateInteractionCircle()
+        {
+            InteractionCircle = new GameObject { name = "Interactable Icon" }.AddComponent<Image>();
+            InteractionCircle.transform.SetParent(GameObject.FindWithTag("UI Canvas").transform);
+            InteractionCircle.sprite = Resources.Load<Sprite>("Sprites/InteractionCircleEmpty");
+            InteractionCircle.gameObject.layer = LayerMask.NameToLayer("UI");
+            InteractionCircle.enabled = false;
         }
 
+        private void CreateInteractionArrow()
+        {
+            _interactionArrow = new GameObject { name = "Interactable Arrow" }.AddComponent<Image>();
+            _interactionArrow.transform.SetParent(GameObject.FindWithTag("UI Canvas").transform);
+            _interactionArrow.sprite = Resources.Load<Sprite>("Sprites/InteractionArrow");
+            _interactionArrow.gameObject.layer = LayerMask.NameToLayer("UI");
+            _interactionArrow.enabled = false;
+        }
+        
+        #endregion
+        
+        #region - Initialising Interaction UI -
+
+        private void InitialiseInteractionCircle()
+        {
+            InteractionCircle.transform.localScale = Vector3.one;
+            InteractionCircle.transform.position = _camera.WorldToScreenPoint(_interactionPoint.position);
+            InteractionCircle.SetNativeSize();
+        }
+        
+        private void InitialiseInteractionArrow()
+        {
+            _interactionArrow.transform.localScale = Vector3.one;
+            _interactionArrow.SetNativeSize();
+        }
+        
+        #endregion
+        
+        #region - Updating Interaction UI -
+
+        private void UpdateInteractionCircleColour()
+        {
+            _currentCircleAlpha = Mathf.MoveTowards(_currentCircleAlpha, _targetCircleAlpha, 5f * Time.deltaTime);
+            
+            var colour = InteractionCircle.color;
+            colour.a = _currentCircleAlpha;
+            InteractionCircle.color = colour;
+
+            if (InteractionCircle.enabled && InteractionCircle.color.a <= 0f) InteractionCircle.enabled = false;
+            if (!InteractionCircle.enabled && InteractionCircle.color.a > 0f) InteractionCircle.enabled = true;
+        }
+
+        private void UpdateInteractionCirclePosition()
+        {
+            ToggleInteractionCircleFill(_playerCon.InteractableInRange == _collider);
+            
+            _camera.ResetWorldToCameraMatrix();
+            InteractionCircle.transform.SetPositionAndRotation((Vector2) _camera.WorldToScreenPoint(_interactionPoint.position), Quaternion.identity);
+        }
+
+        private void ToggleInteractionCircleFill(bool active)
+        {
+            InteractionCircle.sprite =
+                Resources.Load<Sprite>(active ? "Sprites/InteractionCircle" : "Sprites/InteractionCircleEmpty");
+        }
+        
+        private void UpdateInteractionArrowPosition()
+        {
+            var screenPosition = _camera.WorldToScreenPoint(transform.position);
+            var screenCentre = new Vector3(Screen.width, Screen.height, 0) / 2;
+            var screenBounds = screenCentre * 0.95f;
+            
+            screenPosition -= screenCentre;
+            if (screenPosition.z < 0) screenPosition *= -1;
+           
+            var angle = Mathf.Atan2(screenPosition.y, screenPosition.x);
+            var slope = Mathf.Tan(angle);
+
+            var sign = screenPosition.x > 0 ? 1 : -1;
+            screenPosition = new Vector3(screenBounds.x * sign, screenBounds.x * slope * sign, 0);
+            
+            if (screenPosition.y > screenBounds.y)
+                screenPosition = new Vector3(screenBounds.y / slope, screenBounds.y, 0);
+            
+            else if (screenPosition.y < -screenBounds.y)
+                screenPosition = new Vector3(-screenBounds.y / slope, -screenBounds.y, 0);
+            
+            screenPosition += screenCentre;
+            
+            _interactionArrow.transform.position = screenPosition;
+            _interactionArrow.transform.rotation = Quaternion.Euler(0f, 0f, angle * Mathf.Rad2Deg);
+        }
+        
+        private void UpdateInteractionArrowColour()
+        {
+            _currentArrowAlpha = Mathf.MoveTowards(_currentArrowAlpha, _targetArrowAlpha, 5f * Time.deltaTime);
+            
+            var colour = _interactionArrow.color;
+            colour.a = _currentArrowAlpha;
+            _interactionArrow.color = colour;
+
+            if (_interactionArrow.enabled && _interactionArrow.color.a <= 0f) _interactionArrow.enabled = false;
+            if (!_interactionArrow.enabled && _interactionArrow.color.a > 0f) _interactionArrow.enabled = true;
+        }
+        
+        #endregion
+        
+        #region - Helper Methods -
+        
         private List<Vector3> GetBoundCorners()
         {
             var boundCorners = new List<Vector3>();
@@ -100,37 +261,16 @@ namespace Objects
             boundCorners.Add(boundPoint6);
             boundCorners.Add(boundPoint7);
             boundCorners.Add(boundPoint8);
+            boundCorners.Add(_interactionPoint.position);
 
             return boundCorners;
-        }
-
-        private void PrepareIcon()
-        {
-            InteractableIcon.transform.localScale = Vector3.one;
-            InteractableIcon.transform.position = _camera.WorldToScreenPoint(_interactionPoint.position);
-            InteractableIcon.SetNativeSize();
-        }
-
-        private void UpdateIcon()
-        {
-            ToggleIcon(_playerCon.InteractableInRange == _collider);
-
-            InteractableIcon.color = new Color(1, 1, 1, (DistanceToPlayer() - 10f) / (5f - 10f) * (1f - 0f) + 0f);
-            
-            
-            _camera.ResetWorldToCameraMatrix();
-            InteractableIcon.transform.SetPositionAndRotation((Vector2) _camera.WorldToScreenPoint(_interactionPoint.position), Quaternion.identity);
         }
 
         private float DistanceToPlayer()
         {
             return Vector3.Distance(_playerCon.transform.position, _interactionPoint.transform.position);
         }
-
-        private void ToggleIcon(bool active)
-        {
-            InteractableIcon.sprite =
-                Resources.Load<Sprite>(active ? "Sprites/InteractionCircle" : "Sprites/InteractionCircleEmpty");
-        }
+        
+        #endregion
     }
 }

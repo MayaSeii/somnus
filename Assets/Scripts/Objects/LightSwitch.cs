@@ -18,7 +18,7 @@ namespace Objects
 
         public override void Interact()
         {
-            if (!InteractableIcon.enabled) return;
+            if (!InteractionCircle.enabled) return;
             
             _state = !_state;
             _associatedLights.ForEach(l => l.gameObject.SetActive(_state));

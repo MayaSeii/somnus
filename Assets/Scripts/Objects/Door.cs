@@ -18,7 +18,7 @@ namespace Objects
 
         public override void Interact()
         {
-            if (!InteractableIcon.enabled) return;
+            if (!InteractionCircle.enabled) return;
             
             _isOpen = !_isOpen;
 

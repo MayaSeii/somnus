@@ -128,7 +128,7 @@ namespace Controllers
     
         #endregion
     
-        #region - UNITY Update -
+        #region - UNITY Updates -
 
         private void Update()
         {
@@ -181,6 +181,12 @@ namespace Controllers
         
             CameraTransform.localEulerAngles = Vector3.right * _cameraPitch;
             transform.Rotate(Vector3.up * (targetMouseDelta.x * (Settings.InvertX ? -1 : 1) * Settings.MouseSensitivityX));
+        }
+
+        public Vector3 GetCameraAbsolutePosition()
+        {
+            var position = CameraTransform.position;
+            return new Vector3(position.x, _cameraHeight, position.z);
         }
     
         #endregion
