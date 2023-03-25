@@ -24,11 +24,13 @@ public class AudioManager : MonoBehaviour
         InitialiseAmbience(FMODEvents.Instance.DeepHum);
     }
 
-    private void InitialiseAmbience(EventReference sound)
+    public EventInstance InitialiseAmbience(EventReference sound, string objectTag = "Player")
     {
         var instance = CreateEventInstance(sound);
-        RuntimeManager.AttachInstanceToGameObject(instance, GameObject.FindWithTag("Player").transform);
+        RuntimeManager.AttachInstanceToGameObject(instance, GameObject.FindWithTag(objectTag).transform);
         instance.start();
+
+        return instance;
     }
 
     public void ChangeParameter(EventInstance ei, string parameterName, float parameterValue)

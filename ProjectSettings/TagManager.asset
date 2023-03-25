@@ -11,6 +11,7 @@ TagManager:
   - Interactable
   - UI Canvas
   - Interaction Point
+  - Clock
   layers:
   - Default
   - TransparentFX

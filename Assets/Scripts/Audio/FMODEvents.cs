@@ -14,6 +14,7 @@ public class FMODEvents : MonoBehaviour
     [field: Header("Ambience")]
     [field: SerializeField] public EventReference LightHum { get; private set; }
     [field: SerializeField] public EventReference DeepHum { get; private set; }
+    [field: SerializeField] public EventReference ClockTicking { get; private set; }
     
     [field: Header("Light Switch")]
     [field: SerializeField] public EventReference LightSwitchOn { get; private set; }
