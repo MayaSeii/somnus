@@ -9,6 +9,8 @@ TagManager:
   - Light Switch
   - Door
   - Interactable
+  - UI Canvas
+  - Interaction Point
   layers:
   - Default
   - TransparentFX

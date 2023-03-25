@@ -6,6 +6,7 @@ using Quaternion = UnityEngine.Quaternion;
 using Vector3 = UnityEngine.Vector3;
 using FMOD.Studio;
 using FMODUnity;
+using Objects;
 using STOP_MODE = FMOD.Studio.STOP_MODE;
 
 namespace Controllers
@@ -87,7 +88,7 @@ namespace Controllers
         [field: SerializeField, Header("Interacting")] public LayerMask InteractionLayerMask { get; set; }
         [field: SerializeField] public float InteractionDistance { get; set; }
         
-        private Collider _interactableInRange;
+        public Collider InteractableInRange { get; set; }
         
         #endregion
         
@@ -120,6 +121,9 @@ namespace Controllers
 
             _footstepsInstance = AudioManager.Instance.CreateEventInstance(FMODEvents.Instance.Footsteps);
             RuntimeManager.AttachInstanceToGameObject(_footstepsInstance, transform, _rb);
+            AudioManager.Instance.ChangeParameter(_footstepsInstance, "footstepFrequency", .8f);
+
+            _sin = _cameraHeight;
         }
     
         #endregion
@@ -131,10 +135,6 @@ namespace Controllers
             UpdateRest();
             UpdateInteractionArea();
             UpdateSounds();
-        }
-
-        private void LateUpdate()
-        {
             UpdateCamera();
         }
 
@@ -174,7 +174,7 @@ namespace Controllers
 
         private void UpdateCamera()
         {
-            var targetMouseDelta = Mouse.current.delta.ReadValue() * Time.deltaTime;
+            var targetMouseDelta = Mouse.current.delta.ReadValue() * (.01f * Time.timeScale);
         
             _cameraPitch -= targetMouseDelta.y * (Settings.InvertY ? -1 : 1) * Settings.MouseSensitivityY;
             _cameraPitch = Mathf.Clamp(_cameraPitch, -CameraPitchLimit, CameraPitchLimit);
@@ -224,6 +224,7 @@ namespace Controllers
             _collider.center = new Vector3(0, (CrouchColliderHeight - ColliderHeight) / 2f, 0);
 
             UIManager.Instance.ToggleCrouchVignette(true);
+            AudioManager.Instance.ChangeParameter(_footstepsInstance, "footstepFrequency", .2f);
         }
 
         public void PrepareStand(InputAction.CallbackContext context)
@@ -240,6 +241,7 @@ namespace Controllers
             _collider.center = Vector3.zero;
         
             UIManager.Instance.ToggleCrouchVignette(false);
+            AudioManager.Instance.ChangeParameter(_footstepsInstance, "footstepFrequency", .8f);
         }
 
         private bool HasLowCeilingAbove()
@@ -329,15 +331,14 @@ namespace Controllers
         private void UpdateInteractionArea()
         {
             Physics.Raycast(CameraTransform.position, CameraTransform.forward, out var ray, InteractionDistance, InteractionLayerMask);
-            _interactableInRange = ray.distance > 0 ? ray.collider : null;
+            InteractableInRange = ray.distance > 0 ? ray.collider : null;
             DebugManager.Instance.UpdateCurrentInteractable(ray.distance > 0 ? ray.collider.name : "None");
-            UIManager.Instance.ToggleInteractionCircle(ray.distance > 0);
         }
 
         public void Interact(InputAction.CallbackContext context)
         {
-            if (!_interactableInRange) return;
-            _interactableInRange.GetComponent<Interactable>().Interact();
+            if (!InteractableInRange) return;
+            InteractableInRange.GetComponent<Interactable>().Interact();
         }
         
         #endregion
