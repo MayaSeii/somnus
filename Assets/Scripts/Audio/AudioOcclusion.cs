@@ -1,6 +1,8 @@
+using System;
 using FMOD.Studio;
 using FMODUnity;
 using UnityEngine;
+using STOP_MODE = FMOD.Studio.STOP_MODE;
 
 namespace Audio
 {
@@ -34,7 +36,6 @@ namespace Audio
             _eventInstance = RuntimeManager.CreateInstance(EventRef);
             RuntimeManager.AttachInstanceToGameObject(_eventInstance, transform, GetComponent<Rigidbody>());
             _eventInstance.start();
-            _eventInstance.release();
             
             RuntimeManager.GetEventDescription(EventRef).getMinMaxDistance(out _, out _maxDistance);
             _listener = FindObjectOfType<StudioListener>();
@@ -51,6 +52,20 @@ namespace Audio
             _hitCount = 0;
         }
         
+        #endregion
+        
+        #region - UNITY OnEnable & OnDisable -
+
+        private void OnEnable()
+        {
+            _eventInstance.start();
+        }
+
+        private void OnDisable()
+        {
+            _eventInstance.stop(STOP_MODE.ALLOWFADEOUT);
+        }
+
         #endregion
         
         #region - Occlusion -

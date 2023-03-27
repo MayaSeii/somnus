@@ -1,66 +1,71 @@
 using System.Collections.Generic;
-using UnityEngine;
-using FMODUnity;
 using FMOD.Studio;
+using FMODUnity;
+using General;
+using UnityEngine;
 using Debug = UnityEngine.Debug;
 
-public class AudioManager : MonoBehaviour
+namespace Audio
 {
-    public static AudioManager Instance { get; private set; }
-
-    private List<EventInstance> _eventInstances;
-
-    private void Awake()
+    public class AudioManager : MonoBehaviour
     {
-        if (Instance != null) Debug.LogError("Found more than one Audio Manager in the scene.");
-        Instance = this;
+        public static AudioManager Instance { get; private set; }
 
-        _eventInstances = new List<EventInstance>();
-    }
+        private List<EventInstance> _eventInstances;
 
-    private void Start()
-    {
-        InitialiseAmbience(FMODEvents.Instance.LightHum);
-        InitialiseAmbience(FMODEvents.Instance.DeepHum);
-    }
-
-    public EventInstance InitialiseAmbience(EventReference sound, string objectTag = "Player")
-    {
-        var instance = CreateEventInstance(sound);
-        RuntimeManager.AttachInstanceToGameObject(instance, GameObject.FindWithTag(objectTag).transform);
-        instance.start();
-
-        return instance;
-    }
-
-    public void ChangeParameter(EventInstance ei, string parameterName, float parameterValue)
-    {
-        ei.setParameterByName(parameterName, parameterValue);
-    }
-
-    public void PlayOneShot(EventReference sound, Vector3 worldPos)
-    {
-        RuntimeManager.PlayOneShot(sound, worldPos);
-    }
-
-    public EventInstance CreateEventInstance(EventReference sound)
-    {
-        var eventInstance = RuntimeManager.CreateInstance(sound);
-        _eventInstances.Add(eventInstance);
-        return eventInstance;
-    }
-
-    private void CleanUp()
-    {
-        foreach (var ei in _eventInstances)
+        private void Awake()
         {
-            ei.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
-            ei.release();
-        }
-    }
+            if (Instance != null) Debug.LogError("Found more than one Audio Manager in the scene.");
+            Instance = this;
 
-    private void OnDestroy()
-    {
-        CleanUp();
+            _eventInstances = new List<EventInstance>();
+        }
+
+        private void Start()
+        {
+            //InitialiseAmbience(FMODEvents.Instance.LightHum);
+            InitialiseAmbience(FMODEvents.Instance.DeepHum);
+            
+            InitialiseAmbience(FMODEvents.Instance.GameStart);
+            InitialiseAmbience(FMODEvents.Instance.RandomMusic);
+        }
+
+        private void InitialiseAmbience(EventReference sound)
+        {
+            var instance = CreateEventInstance(sound);
+            RuntimeManager.AttachInstanceToGameObject(instance, GameManager.Instance.Player.transform);
+            instance.start();
+        }
+
+        public static void ChangeParameter(EventInstance ei, string parameterName, float parameterValue)
+        {
+            ei.setParameterByName(parameterName, parameterValue);
+        }
+
+        public static void PlayOneShot(EventReference sound, Vector3 worldPos)
+        {
+            RuntimeManager.PlayOneShot(sound, worldPos);
+        }
+
+        public EventInstance CreateEventInstance(EventReference sound)
+        {
+            var eventInstance = RuntimeManager.CreateInstance(sound);
+            _eventInstances.Add(eventInstance);
+            return eventInstance;
+        }
+
+        private void CleanUp()
+        {
+            foreach (var ei in _eventInstances)
+            {
+                ei.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
+                ei.release();
+            }
+        }
+
+        private void OnDestroy()
+        {
+            CleanUp();
+        }
     }
 }

@@ -1,12 +1,16 @@
 using System;
-using Managers;
+using Audio;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using Quaternion = UnityEngine.Quaternion;
 using Vector3 = UnityEngine.Vector3;
 using FMOD.Studio;
 using FMODUnity;
+using General;
+using Inputs;
 using Objects;
+using Settings;
+using UI;
 using STOP_MODE = FMOD.Studio.STOP_MODE;
 
 namespace Controllers
@@ -105,6 +109,12 @@ namespace Controllers
         private bool _isLookingAtArm;
         
         #endregion
+        
+        #region - VAR Holding Objects -
+
+        public GameObject HeldObject { get; private set; }
+        
+        #endregion
 
         #region - UNITY Start -
     
@@ -121,7 +131,7 @@ namespace Controllers
 
             _footstepsInstance = AudioManager.Instance.CreateEventInstance(FMODEvents.Instance.Footsteps);
             RuntimeManager.AttachInstanceToGameObject(_footstepsInstance, transform, _rb);
-            AudioManager.Instance.ChangeParameter(_footstepsInstance, "footstepFrequency", .8f);
+            AudioManager.ChangeParameter(_footstepsInstance, "footstepFrequency", .8f);
 
             _sin = _cameraHeight;
         }
@@ -136,6 +146,7 @@ namespace Controllers
             UpdateInteractionArea();
             UpdateSounds();
             UpdateCamera();
+            UpdateHeldObject();
         }
 
         private void FixedUpdate()
@@ -176,11 +187,11 @@ namespace Controllers
         {
             var targetMouseDelta = Mouse.current.delta.ReadValue() * (.01f * Time.timeScale);
         
-            _cameraPitch -= targetMouseDelta.y * (Settings.InvertY ? -1 : 1) * Settings.MouseSensitivityY;
+            _cameraPitch -= targetMouseDelta.y * (Config.InvertY ? -1 : 1) * Config.MouseSensitivityY;
             _cameraPitch = Mathf.Clamp(_cameraPitch, -CameraPitchLimit, CameraPitchLimit);
         
             CameraTransform.localEulerAngles = Vector3.right * _cameraPitch;
-            transform.Rotate(Vector3.up * (targetMouseDelta.x * (Settings.InvertX ? -1 : 1) * Settings.MouseSensitivityX));
+            transform.Rotate(Vector3.up * (targetMouseDelta.x * (Config.InvertX ? -1 : 1) * Config.MouseSensitivityX));
         }
 
         public Vector3 GetCameraAbsolutePosition()
@@ -230,7 +241,7 @@ namespace Controllers
             _collider.center = new Vector3(0, (CrouchColliderHeight - ColliderHeight) / 2f, 0);
 
             UIManager.Instance.ToggleCrouchVignette(true);
-            AudioManager.Instance.ChangeParameter(_footstepsInstance, "footstepFrequency", .2f);
+            AudioManager.ChangeParameter(_footstepsInstance, "footstepFrequency", .2f);
         }
 
         public void PrepareStand(InputAction.CallbackContext context)
@@ -247,7 +258,7 @@ namespace Controllers
             _collider.center = Vector3.zero;
         
             UIManager.Instance.ToggleCrouchVignette(false);
-            AudioManager.Instance.ChangeParameter(_footstepsInstance, "footstepFrequency", .8f);
+            AudioManager.ChangeParameter(_footstepsInstance, "footstepFrequency", .8f);
         }
 
         private bool HasLowCeilingAbove()
@@ -298,7 +309,7 @@ namespace Controllers
         {
             _headBobCounter += Time.fixedDeltaTime;
 
-            if (_rb.velocity is { x: 0, z: 0 } || !Settings.EnableHeadBobbing)
+            if (_rb.velocity is { x: 0, z: 0 } || !Config.EnableHeadBobbing)
             {
                 _sin = Mathf.Lerp(_sin, _cameraHeight, Time.fixedDeltaTime * HeadBobSpeed);
                 _headBobCounter = 0f;
@@ -343,6 +354,8 @@ namespace Controllers
 
         public void Interact(InputAction.CallbackContext context)
         {
+            if (HeldObject && HeldObject.GetComponent<Interactable>().IsThrowable) ThrowHeldObject();
+            
             if (!InteractableInRange) return;
             InteractableInRange.GetComponent<Interactable>().Interact();
         }
@@ -362,6 +375,38 @@ namespace Controllers
             {
                 _footstepsInstance.stop(STOP_MODE.ALLOWFADEOUT);
             }
+        }
+        
+        #endregion
+        
+        #region - Holding Objects -
+        
+        public void HoldObject(GameObject o)
+        {
+            HeldObject = o;
+            HeldObject.GetComponent<Rigidbody>().isKinematic = true;
+            HeldObject.GetComponent<Collider>().enabled = false;
+            HeldObject.GetComponent<Interactable>().MainRenderer.gameObject.layer = LayerMask.NameToLayer("Held Object");
+        }
+
+        private void UpdateHeldObject()
+        {
+            if (!HeldObject) return;
+            
+            var camTransform = GameManager.Instance.MainCamera.transform;
+            HeldObject.transform.position = camTransform.position + camTransform.forward * .5f;
+        }
+
+        public void ThrowHeldObject()
+        {
+            HeldObject.GetComponent<Collider>().enabled = true;
+            
+            HeldObject.GetComponent<Rigidbody>().isKinematic = false;
+            HeldObject.GetComponent<Rigidbody>().AddForce(GameManager.Instance.MainCamera.transform.forward * 10f, ForceMode.Impulse);
+            
+            HeldObject.GetComponent<Interactable>().MainRenderer.gameObject.layer = LayerMask.NameToLayer("Default");
+            
+            HeldObject = null;
         }
         
         #endregion

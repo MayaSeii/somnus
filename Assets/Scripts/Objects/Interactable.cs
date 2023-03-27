@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
-using Controllers;
+using General;
 using UnityEngine;
 using Image = UnityEngine.UI.Image;
 
@@ -12,8 +12,8 @@ namespace Objects
         
         [field: SerializeField] public Renderer MainRenderer { get; set; }
         
-        private Camera _camera;
-        private PlayerController _playerCon;
+        public bool IsThrowable { get; protected set; }
+        
         private Transform _interactionPoint;
         private Collider _collider;
         
@@ -36,8 +36,6 @@ namespace Objects
         
         private void Awake()
         {
-            _camera = Camera.main;
-            _playerCon = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
             _interactionPoint = transform.GetChild(0).CompareTag("Interaction Point") ? transform.GetChild(0) : transform;
             _collider = GetComponent<Collider>();
 
@@ -67,12 +65,19 @@ namespace Objects
 
         private void LateUpdate()
         {
+            if (GameManager.Instance.Player.HeldObject)
+            {
+                _targetArrowAlpha = 0f;
+                _targetCircleAlpha = 0f;
+                return;
+            }
+            
             UpdateInteractionCirclePosition();
             _targetArrowAlpha = 0f;
 
             var showArrow = false;
             
-            var vpPos = _camera.WorldToViewportPoint(_interactionPoint.position);
+            var vpPos = GameManager.Instance.MainCamera.WorldToViewportPoint(_interactionPoint.position);
             
             if (vpPos.x is < 0f or > 1f || vpPos.y is < 0f or > 1f || vpPos.z <= 0f)
             {
@@ -94,7 +99,7 @@ namespace Objects
             
             GetBoundCorners().ForEach(c =>
             {
-                var origin = _playerCon.GetCameraAbsolutePosition();
+                var origin = GameManager.Instance.Player.GetCameraAbsolutePosition();
                 var direction = c - origin;
                 var layerMask = LayerMask.GetMask("Walls", "Interactable");
                 var interactableLayer = LayerMask.NameToLayer("Interactable");
@@ -155,7 +160,7 @@ namespace Objects
         private void InitialiseInteractionCircle()
         {
             InteractionCircle.transform.localScale = Vector3.one;
-            InteractionCircle.transform.position = _camera.WorldToScreenPoint(_interactionPoint.position);
+            InteractionCircle.transform.position = GameManager.Instance.MainCamera.WorldToScreenPoint(_interactionPoint.position);
             InteractionCircle.SetNativeSize();
         }
         
@@ -183,10 +188,10 @@ namespace Objects
 
         private void UpdateInteractionCirclePosition()
         {
-            ToggleInteractionCircleFill(_playerCon.InteractableInRange == _collider);
+            ToggleInteractionCircleFill(GameManager.Instance.Player.InteractableInRange == _collider);
             
-            _camera.ResetWorldToCameraMatrix();
-            InteractionCircle.transform.SetPositionAndRotation((Vector2) _camera.WorldToScreenPoint(_interactionPoint.position), Quaternion.identity);
+            GameManager.Instance.MainCamera.ResetWorldToCameraMatrix();
+            InteractionCircle.transform.SetPositionAndRotation((Vector2) GameManager.Instance.MainCamera.WorldToScreenPoint(_interactionPoint.position), Quaternion.identity);
         }
 
         private void ToggleInteractionCircleFill(bool active)
@@ -197,7 +202,7 @@ namespace Objects
         
         private void UpdateInteractionArrowPosition()
         {
-            var screenPosition = _camera.WorldToScreenPoint(transform.position);
+            var screenPosition = GameManager.Instance.MainCamera.WorldToScreenPoint(transform.position);
             var screenCentre = new Vector3(Screen.width, Screen.height, 0) / 2;
             var screenBounds = screenCentre * 0.95f;
             
@@ -268,7 +273,7 @@ namespace Objects
 
         private float DistanceToPlayer()
         {
-            return Vector3.Distance(_playerCon.transform.position, _interactionPoint.transform.position);
+            return Vector3.Distance(GameManager.Instance.Player.transform.position, _interactionPoint.transform.position);
         }
         
         #endregion
