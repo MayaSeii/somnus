@@ -10,7 +10,6 @@ namespace UI
         private TMP_Text _text;
         private Image _bg;
     
-        // Start is called before the first frame update
         private void Start()
         {
             _bg = GetComponentInChildren<Image>();
@@ -23,7 +22,6 @@ namespace UI
             _bg.enabled = false;
         }
 
-        // Update is called once per frame
         public void OnPointerEnter(PointerEventData eventData)
         {
             _text.color = Color.blue;

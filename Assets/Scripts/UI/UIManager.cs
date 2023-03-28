@@ -1,5 +1,8 @@
 using System;
+using System.Linq;
+using Inputs;
 using Settings;
+using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Rendering.PostProcessing;
@@ -9,12 +12,11 @@ namespace UI
 {
     public class UIManager : MonoBehaviour
     {
-        public static UIManager Instance;
+        public static UIManager Instance { get; private set; }
 
         #region - VAR Interface Elements -
         
         [field: SerializeField, Header("Interface Elements")] public GameObject Crosshair { get; set; }
-        [field: SerializeField] public GameObject InteractionCircle { get; set; }
         
         #endregion
         
@@ -24,6 +26,14 @@ namespace UI
         [field: SerializeField] public GameObject SettingsMenu { get; set; }
     
         private bool _isPaused;
+        
+        #endregion
+        
+        #region - VAR Settings -
+        
+        [field: Header("Settings")]
+        [field: SerializeField] public PageButton[] Buttons { get; private set; }
+        [field: SerializeField] public GameObject[] Pages { get; private set; }
         
         #endregion
         
@@ -39,7 +49,7 @@ namespace UI
     
         #region - VAR Post-Processing -
     
-        [field: SerializeField, Header("Post-Processing")] public Transform ArmCam { get; set; }
+        [field: SerializeField, Header("Post-Processing")] public Transform PostProcessCamera { get; set; }
         [field: SerializeField] public LayerMask DepthLayerMask { get; set; }
         
         private Transform _cam;
@@ -47,6 +57,7 @@ namespace UI
         private PostProcessVolume _postProcessVolume;
         private Vignette _vignette;
         private MotionBlur _motionBlur;
+        private ChromaticAberration _chromaticAberration;
         private DepthOfField _depthOfField;
         private PSXEffects _psxEffects;
     
@@ -76,7 +87,8 @@ namespace UI
             if (_postProcessVolume != null) _postProcessVolume.profile.TryGetSettings(out _vignette);
             if (_postProcessVolume != null) _postProcessVolume.profile.TryGetSettings(out _motionBlur);
             if (_postProcessVolume != null) _postProcessVolume.profile.TryGetSettings(out _depthOfField);
-            _psxEffects = ArmCam.GetComponent<PSXEffects>();
+            if (_postProcessVolume != null) _postProcessVolume.profile.TryGetSettings(out _chromaticAberration);
+            _psxEffects = PostProcessCamera.GetComponent<PSXEffects>();
             
             _targetVignette = 0.27f;
             _targetDoF = -1f;
@@ -113,6 +125,8 @@ namespace UI
             Time.timeScale = _isPaused ? 0 : 1;
             Cursor.visible = _isPaused;
             Cursor.lockState = _isPaused ? CursorLockMode.None : CursorLockMode.Locked;
+
+            ControlsManager.Instance.TogglePlayerInputMap(!_isPaused);
             
             PauseMenu.SetActive(_isPaused);
             Crosshair.SetActive(!_isPaused);
@@ -131,6 +145,18 @@ namespace UI
         {
             PauseMenu.SetActive(SettingsMenu.activeInHierarchy);
             SettingsMenu.SetActive(!SettingsMenu.activeInHierarchy);
+        }
+
+        public void TogglePage(int index)
+        {
+            SettingsManager.Instance.CurrentPage = (SettingsPage) index;
+            Pages.ToList().ForEach(p => p.SetActive(Array.IndexOf(Pages, p) == index));
+            Buttons.ToList().ForEach(b => b.GetComponentInChildren<TMP_Text>().color = Array.IndexOf(Buttons, b) == index ? Color.blue : Color.white);
+        }
+
+        public PageButton ActiveButton()
+        {
+            return Buttons[(int) SettingsManager.Instance.CurrentPage];
         }
         
         #endregion
@@ -156,16 +182,6 @@ namespace UI
         }
     
         #endregion
-        
-        #region - Interacting -
-
-        public void ToggleInteractionCircle(bool toggle)
-        {
-            InteractionCircle.SetActive(toggle);
-            Crosshair.SetActive(!toggle);
-        }
-        
-        #endregion
 
         #region - Post-Processing -
     
@@ -182,7 +198,7 @@ namespace UI
 
         public void ToggleFilter(bool enableFilter)
         {
-            ArmCam.GetComponent<postVHSPro>().enabled = enableFilter;
+            PostProcessCamera.GetComponent<postVHSPro>().enabled = enableFilter;
         }
 
         public void ToggleDoF(bool enableDoF)
@@ -205,6 +221,11 @@ namespace UI
         public void TogglePsx(bool enablePsx)
         {
             _psxEffects.enabled = enablePsx;
+        }
+
+        public void ToggleChromaticAberration(bool enableChromaticAberration)
+        {
+            _chromaticAberration.enabled.value = enableChromaticAberration;
         }
     
         #endregion

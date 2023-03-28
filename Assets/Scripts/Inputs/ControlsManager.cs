@@ -1,3 +1,4 @@
+using System;
 using General;
 using Haunts;
 using Settings;
@@ -97,6 +98,10 @@ namespace Inputs
             
             _iDebugHauntLightsOff.started += HauntManager.Instance.ForceLightsOffHaunt;
             _iDebugHauntClockChime.started += HauntManager.Instance.ForceClockChimeHaunt;
+
+            var rebinds = PlayerPrefs.GetString("rebinds", string.Empty);
+            if (string.IsNullOrEmpty(rebinds)) return;
+            _controls.LoadBindingOverridesFromJson(rebinds);
         }
         
         #endregion
@@ -166,6 +171,36 @@ namespace Inputs
 
                 _iPlayerCrouch.started -= GameManager.Instance.Player.ToggleCrouch;
             }
+        }
+        
+        #endregion
+        
+        #region - Rebinding -
+
+        public void TogglePlayerInputMap(bool toggle)
+        {
+            if (toggle) _controls.Player.Enable();
+            else _controls.Player.Disable();
+        }
+        
+        public InputAction GetInputReference(InputType input)
+        {
+            var inputReference = input switch
+            {
+                InputType.MoveForward => _iPlayerMove,
+                InputType.MoveBackward => _iPlayerMove,
+                InputType.MoveRight => _iPlayerMove,
+                InputType.MoveLeft => _iPlayerMove,
+                InputType.LeanRight => _iPlayerLeanRight,
+                InputType.LeanLeft => _iPlayerLeanLeft,
+                InputType.Crouch => _iPlayerCrouch,
+                InputType.Interact => _iPlayerInteract,
+                InputType.CloseEyes => _iPlayerBlink,
+                InputType.Watch => _iPlayerWatch,
+                _ => throw new ArgumentOutOfRangeException(nameof(input), input, null)
+            };
+
+            return inputReference;
         }
         
         #endregion
