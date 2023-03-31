@@ -1,3 +1,4 @@
+using Audio;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -32,6 +33,16 @@ namespace UI
         {
             _text.color = Color.white;
             _bg.enabled = false;
+        }
+        
+        public void PlaySound()
+        {
+            AudioManager.PlayOneShot(FMODEvents.Instance.SettingsButton, transform.position);
+        }
+
+        public void PlayTick()
+        {
+            AudioManager.PlayOneShot(FMODEvents.Instance.SliderTick, transform.position);
         }
     }
 }

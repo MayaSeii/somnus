@@ -10,6 +10,7 @@ namespace Objects
         {
             IsThrowable = true;
             base.Start();
+            ShowArrow = false;
         }
         
         public override void Interact()

@@ -443,6 +443,7 @@ MonoBehaviour:
   - Master
   Banks:
   - Ambience
+  - Interface
   - Music
   - SFX
   BanksToLoad: []

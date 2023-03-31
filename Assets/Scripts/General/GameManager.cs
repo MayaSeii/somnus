@@ -1,4 +1,3 @@
-using System;
 using Controllers;
 using UnityEngine;
 
@@ -10,14 +9,23 @@ namespace General
         
         public PlayerController Player { get; private set; }
         public Camera MainCamera { get; private set; }
+        public Camera GameplayUICamera { get; private set; }
 
         private void Awake()
         {
-            if (Instance != null) Debug.LogError("Found more than one Game Manager in the scene.");
             Instance = this;
-            
+        }
+
+        public void InitialiseInMenu()
+        {
+            MainCamera = Camera.main;
+        }
+
+        public void InitialiseInGame()
+        {
             Player = FindObjectOfType<PlayerController>();
             MainCamera = Camera.main;
+            GameplayUICamera = GameObject.FindWithTag("Gameplay UI").GetComponent<Canvas>().worldCamera;
         }
     }
 }

@@ -16,10 +16,13 @@ namespace Objects
         
         private Transform _interactionPoint;
         private Collider _collider;
+        private Canvas _gameplayUICanvas;
         
         #endregion
         
         #region - VAR UI Elements -
+
+        protected bool ShowArrow;
         
         protected Image InteractionCircle;
         private Image _interactionArrow;
@@ -38,6 +41,7 @@ namespace Objects
         {
             _interactionPoint = transform.GetChild(0).CompareTag("Interaction Point") ? transform.GetChild(0) : transform;
             _collider = GetComponent<Collider>();
+            _gameplayUICanvas = GameObject.FindWithTag("Gameplay UI").GetComponent<Canvas>();
 
             CreateInteractionCircle();
             CreateInteractionArrow();
@@ -82,14 +86,14 @@ namespace Objects
             if (vpPos.x is < 0f or > 1f || vpPos.y is < 0f or > 1f || vpPos.z <= 0f)
             {
                 _targetCircleAlpha = 0f;
-                showArrow = DistanceToPlayer() < 10;
+                showArrow = DistanceToPlayer() < 7;
             }
             else
             {
                 _interactionArrow.enabled = false;
             }
 
-            if (!showArrow && DistanceToPlayer() > 10)
+            if (!showArrow && DistanceToPlayer() > 7)
             {
                 _targetCircleAlpha = 0f;
                 return;
@@ -104,7 +108,7 @@ namespace Objects
                 var layerMask = LayerMask.GetMask("Walls", "Interactable");
                 var interactableLayer = LayerMask.NameToLayer("Interactable");
                 
-                if (!Physics.Raycast(origin, direction, out var raycastHit, 10, layerMask)) return;
+                if (!Physics.Raycast(origin, direction, out var raycastHit, 7, layerMask)) return;
                 if (raycastHit.collider.gameObject.layer == interactableLayer) raycastHits.Add(raycastHit);
             });
 
@@ -112,17 +116,19 @@ namespace Objects
             
             if (!showArrow)
             {
-                _targetCircleAlpha = enable ? (DistanceToPlayer() - 10f) / -5f : 0f;
+                _targetCircleAlpha = enable ? (DistanceToPlayer() - 7f) / -5f : 0f;
             }
             else if (enable)
             {
-                _targetArrowAlpha = (DistanceToPlayer() - 10f) / -5f;
+                _targetArrowAlpha = (DistanceToPlayer() - 5f) / -5f;
                 UpdateInteractionArrowPosition();
             }
             else
             {
                 _targetArrowAlpha = 0f;
             }
+
+            if (!ShowArrow) _targetArrowAlpha = 0f;
         }
         
         #endregion
@@ -138,7 +144,7 @@ namespace Objects
         private void CreateInteractionCircle()
         {
             InteractionCircle = new GameObject { name = "Interactable Icon" }.AddComponent<Image>();
-            InteractionCircle.transform.SetParent(GameObject.FindWithTag("UI Canvas").transform);
+            InteractionCircle.transform.SetParent(GameObject.FindWithTag("Gameplay UI").transform);
             InteractionCircle.sprite = Resources.Load<Sprite>("Sprites/InteractionCircleEmpty");
             InteractionCircle.gameObject.layer = LayerMask.NameToLayer("UI");
             InteractionCircle.enabled = false;
@@ -147,27 +153,31 @@ namespace Objects
         private void CreateInteractionArrow()
         {
             _interactionArrow = new GameObject { name = "Interactable Arrow" }.AddComponent<Image>();
-            _interactionArrow.transform.SetParent(GameObject.FindWithTag("UI Canvas").transform);
+            _interactionArrow.transform.SetParent(GameObject.FindWithTag("Gameplay UI").transform);
             _interactionArrow.sprite = Resources.Load<Sprite>("Sprites/InteractionArrow");
             _interactionArrow.gameObject.layer = LayerMask.NameToLayer("UI");
             _interactionArrow.enabled = false;
+
+            ShowArrow = true;
         }
         
         #endregion
         
         #region - Initialising Interaction UI -
-
+    
         private void InitialiseInteractionCircle()
         {
             InteractionCircle.transform.localScale = Vector3.one;
             InteractionCircle.transform.position = GameManager.Instance.MainCamera.WorldToScreenPoint(_interactionPoint.position);
             InteractionCircle.SetNativeSize();
+            InteractionCircle.GetComponent<RectTransform>().sizeDelta = new Vector2(24, 24);
         }
         
         private void InitialiseInteractionArrow()
         {
             _interactionArrow.transform.localScale = Vector3.one;
             _interactionArrow.SetNativeSize();
+            _interactionArrow.GetComponent<RectTransform>().sizeDelta = new Vector2(16, 16);
         }
         
         #endregion
@@ -191,7 +201,8 @@ namespace Objects
             ToggleInteractionCircleFill(GameManager.Instance.Player.InteractableInRange == _collider);
             
             GameManager.Instance.MainCamera.ResetWorldToCameraMatrix();
-            InteractionCircle.transform.SetPositionAndRotation((Vector2) GameManager.Instance.MainCamera.WorldToScreenPoint(_interactionPoint.position), Quaternion.identity);
+            GameManager.Instance.GameplayUICamera.ResetWorldToCameraMatrix();
+            InteractionCircle.transform.position = WorldToCamPoint(_interactionPoint.position);
         }
 
         private void ToggleInteractionCircleFill(bool active)
@@ -223,7 +234,10 @@ namespace Objects
             
             screenPosition += screenCentre;
             
-            _interactionArrow.transform.position = screenPosition;
+            var screen = screenPosition;
+            screen.z = (_gameplayUICanvas.transform.position - GameManager.Instance.MainCamera.transform.position).magnitude;
+            
+            _interactionArrow.transform.position = GameManager.Instance.GameplayUICamera.ScreenToWorldPoint(screen);
             _interactionArrow.transform.rotation = Quaternion.Euler(0f, 0f, angle * Mathf.Rad2Deg);
         }
         
@@ -274,6 +288,13 @@ namespace Objects
         private float DistanceToPlayer()
         {
             return Vector3.Distance(GameManager.Instance.Player.transform.position, _interactionPoint.transform.position);
+        }
+
+        private Vector3 WorldToCamPoint(Vector3 pos)
+        {
+            var screen = GameManager.Instance.MainCamera.WorldToScreenPoint(pos);
+            screen.z = (_gameplayUICanvas.transform.position - GameManager.Instance.MainCamera.transform.position).magnitude;
+            return GameManager.Instance.GameplayUICamera.ScreenToWorldPoint(screen);
         }
         
         #endregion

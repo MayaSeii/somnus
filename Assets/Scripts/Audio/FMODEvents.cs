@@ -8,14 +8,25 @@ namespace Audio
         public static FMODEvents Instance { get; private set; }
         
         [field: Header("Music")]
+        [field: SerializeField] public EventReference TitlePiano { get; private set; }
         [field: SerializeField] public EventReference GameStart { get; private set; }
         [field: SerializeField] public EventReference RandomMusic { get; private set; }
+        [field: SerializeField] public EventReference KeySmash { get; private set; }
+        
+        [field: Header("Interface")]
+        [field: SerializeField] public EventReference MenuBuzz { get; private set; }
+        [field: SerializeField] public EventReference MenuExit { get; private set; }
+        [field: SerializeField] public EventReference PageButton { get; private set; }
+        [field: SerializeField] public EventReference SettingsButton { get; private set; }
+        [field: SerializeField] public EventReference RebindRepeat { get; private set; }
+        [field: SerializeField] public EventReference SliderTick { get; private set; }
+        [field: SerializeField] public EventReference Scrollbar { get; private set; }
+        [field: SerializeField] public EventReference Hover { get; private set; }
     
         [field: Header("Player")]
         [field: SerializeField] public EventReference Footsteps { get; private set; }
     
         [field: Header("Ambience")]
-        [field: SerializeField] public EventReference LightHum { get; private set; }
         [field: SerializeField] public EventReference DeepHum { get; private set; }
     
         [field: Header("Clock")]
@@ -37,7 +48,6 @@ namespace Audio
 
         private void Awake()
         {
-            if (Instance != null) Debug.LogError("Found more than one FMOD Events instance in the scene.");
             Instance = this;
         }
     }

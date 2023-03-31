@@ -1,4 +1,5 @@
 using System.Linq;
+using Audio;
 using Inputs;
 using TMPro;
 using UnityEngine;
@@ -63,11 +64,14 @@ public class Rebinder : MonoBehaviour
         
         if (CheckDuplicateBindings(_inputAction, _bindingIndex))
         {
+            AudioManager.PlayOneShot(FMODEvents.Instance.RebindRepeat, transform.position);
             _inputAction.RemoveBindingOverride(_bindingIndex);
             CleanUp();
             StartRebinding();
             return;
         }
+        
+        AudioManager.PlayOneShot(FMODEvents.Instance.SettingsButton, transform.position);
         
         UpdateBindingDisplay();
         CleanUp();

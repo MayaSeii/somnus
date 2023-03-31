@@ -1,7 +1,6 @@
 using System;
-using Settings;
+using Audio;
 using TMPro;
-using UI;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -38,6 +37,7 @@ namespace UI
 
         public void ChangeSettingsPage()
         {
+            AudioManager.PlayOneShot(FMODEvents.Instance.PageButton, transform.position);
             UIManager.Instance.TogglePage(Array.IndexOf(UIManager.Instance.Buttons, this));
         }
 

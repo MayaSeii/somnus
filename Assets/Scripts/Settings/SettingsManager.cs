@@ -1,7 +1,5 @@
 using Audio;
-using FMOD.Studio;
 using Inputs;
-using UI;
 using UnityEngine;
 
 namespace Settings
@@ -15,7 +13,6 @@ namespace Settings
 
         private void Awake()
         {
-            if (Instance != null) Debug.LogError("Found more than one Settings Manager in the scene.");
             Instance = this;
         }
 
@@ -26,6 +23,7 @@ namespace Settings
         private void Start()
         {
             CurrentPage = SettingsPage.Gameplay;
+            Config.InitialiseConfigs();
         }
         
         #endregion
@@ -78,27 +76,27 @@ namespace Settings
 
         public void ToggleMotionBlur(bool toggle)
         {
-            UIManager.Instance.ToggleMotionBlur(toggle);
+            Config.EnableMotionBlur = toggle;
         }
 
         public void ToggleFilter(bool toggle)
         {
-            UIManager.Instance.ToggleFilter(toggle);
+            Config.EnableFilter = toggle;
         }
         
         public void ToggleDoF(bool toggle)
         {
-            UIManager.Instance.ToggleDoFSetting(toggle);
+            Config.EnableDoF = toggle;
         }
         
         public void TogglePsx(bool toggle)
         {
-            UIManager.Instance.TogglePsx(toggle);
+            Config.EnablePsx = toggle;
         }
 
         public void ToggleChromaticAberration(bool toggle)
         {
-            UIManager.Instance.ToggleChromaticAberration(toggle);
+            Config.EnableChromaticAberration = toggle;
         }
         
         #endregion
@@ -130,16 +128,11 @@ namespace Settings
                     AudioManager.Instance.InterfaceVolume = value;
                     break;
             }
-            
-            PlayerPrefs.SetFloat($"volume{volumeType}", value);
         }
         
         public static void ToggleRandomMusic(bool toggle)
         {
-            if (toggle) AudioManager.Instance.RandomMusicInstance.start();
-            else AudioManager.Instance.RandomMusicInstance.stop(STOP_MODE.IMMEDIATE);
-            
-            PlayerPrefs.SetInt("randomMusic", toggle ? 1 : 0);
+            Config.EnableRandomMusic = toggle;
         }
         
         #endregion

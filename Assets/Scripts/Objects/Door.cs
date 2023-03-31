@@ -14,6 +14,7 @@ namespace Objects
         {
             base.Start();
             _animator = GetComponent<Animator>();
+            ShowArrow = false;
         }
 
         public override void Interact()

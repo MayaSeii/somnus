@@ -1,5 +1,8 @@
 using System;
 using System.Linq;
+using Audio;
+using FMOD.Studio;
+using General;
 using Inputs;
 using Settings;
 using TMPro;
@@ -16,14 +19,14 @@ namespace UI
 
         #region - VAR Interface Elements -
         
-        [field: SerializeField, Header("Interface Elements")] public GameObject Crosshair { get; set; }
+        [field: SerializeField, Header("Interface Elements")] public GameObject Crosshair { get; private set; }
         
         #endregion
         
         #region - VAR Menus -
         
-        [field: SerializeField, Header("Menus")] public GameObject PauseMenu { get; set; }
-        [field: SerializeField] public GameObject SettingsMenu { get; set; }
+        [field: SerializeField, Header("Menus")] public GameObject PauseMenu { get; private set; }
+        [field: SerializeField] public GameObject SettingsMenu { get; private set; }
     
         private bool _isPaused;
         
@@ -39,9 +42,9 @@ namespace UI
         
         #region - VAR Blinking & Rest -
     
-        [field: SerializeField, Header("Blinking")] public Image BlinkOverlay { get; set; }
-        [field: SerializeField] public Slider RestMeter { get; set; }
-        [field: SerializeField] public Slider ArmRestMeter { get; set; }
+        [field: SerializeField, Header("Blinking")] public Image BlinkOverlay { get; private set; }
+        [field: SerializeField] public Slider RestMeter { get; private set; }
+        [field: SerializeField] public Slider ArmRestMeter { get; private set; }
 
         private float _targetBlinkOpacity;
     
@@ -49,8 +52,8 @@ namespace UI
     
         #region - VAR Post-Processing -
     
-        [field: SerializeField, Header("Post-Processing")] public Transform PostProcessCamera { get; set; }
-        [field: SerializeField] public LayerMask DepthLayerMask { get; set; }
+        [field: SerializeField, Header("Post-Processing")] public Transform PostProcessCamera { get; private set; }
+        [field: SerializeField] public LayerMask DepthLayerMask { get; private set; }
         
         private Transform _cam;
         
@@ -94,8 +97,9 @@ namespace UI
             _targetDoF = -1f;
 
             var cursorTexture = Resources.Load<Texture2D>("Sprites/Cursor");
-            Cursor.SetCursor(cursorTexture, Vector2.zero, CursorMode.Auto);
+            Cursor.SetCursor(cursorTexture, new Vector2(8, 0), CursorMode.Auto);
             Cursor.visible = false;
+            Cursor.lockState = CursorLockMode.Locked;
         }
     
         #endregion
@@ -127,9 +131,17 @@ namespace UI
             Cursor.lockState = _isPaused ? CursorLockMode.None : CursorLockMode.Locked;
 
             ControlsManager.Instance.TogglePlayerInputMap(!_isPaused);
+            GameManager.Instance.GameplayUICamera.gameObject.SetActive(!_isPaused);
             
             PauseMenu.SetActive(_isPaused);
             Crosshair.SetActive(!_isPaused);
+            
+            if (_isPaused) AudioManager.Instance.EventInstances["MenuBuzz"].start();
+            else
+            {
+                AudioManager.Instance.EventInstances["MenuBuzz"].stop(STOP_MODE.IMMEDIATE);
+                AudioManager.PlayOneShot(FMODEvents.Instance.MenuExit, transform.position);
+            }
         }
 
         public void QuitGame()
@@ -143,6 +155,8 @@ namespace UI
         
         public void ToggleSettings()
         {
+            if (SettingsMenu.activeInHierarchy) AudioManager.PlayOneShot(FMODEvents.Instance.SettingsButton, transform.position);
+            
             PauseMenu.SetActive(SettingsMenu.activeInHierarchy);
             SettingsMenu.SetActive(!SettingsMenu.activeInHierarchy);
         }
@@ -198,7 +212,7 @@ namespace UI
 
         public void ToggleFilter(bool enableFilter)
         {
-            PostProcessCamera.GetComponent<postVHSPro>().enabled = enableFilter;
+            FindObjectOfType<postVHSPro>().enabled = enableFilter;
         }
 
         public void ToggleDoF(bool enableDoF)

@@ -46,7 +46,6 @@ namespace Inputs
         
         private void Awake()
         {
-            if (Instance != null) Debug.LogError("Found more than one Controls Manager in the scene.");
             Instance = this;
         
             _controls = new Controls();
@@ -64,8 +63,6 @@ namespace Inputs
 
             _iDebugHauntLightsOff = _controls.Debug.HauntLightsOff;
             _iDebugHauntClockChime = _controls.Debug.HauntClockChime;
-            
-            Cursor.lockState = CursorLockMode.Locked;
         }
         
         #endregion
@@ -74,36 +71,11 @@ namespace Inputs
         
         private void Start()
         {
-            _iPlayerCrouch.performed += GameManager.Instance.Player.Crouch;
-            _iPlayerCrouch.canceled += GameManager.Instance.Player.PrepareStand;
-            
-            _iPlayerLeanLeft.started += GameManager.Instance.Player.LeanLeft;
-            _iPlayerLeanLeft.canceled += GameManager.Instance.Player.StopLeaning;
-            
-            _iPlayerLeanRight.started += GameManager.Instance.Player.LeanRight;
-            _iPlayerLeanRight.canceled += GameManager.Instance.Player.StopLeaning;
-            
-            _iPlayerBlink.started += GameManager.Instance.Player.Blink;
-            _iPlayerBlink.started += UIManager.Instance.Blink;
-            _iPlayerBlink.canceled += GameManager.Instance.Player.StopBlinking;
-            _iPlayerBlink.canceled += UIManager.Instance.StopBlinking;
-            
-            _iPlayerWatch.started += GameManager.Instance.Player.ToggleWatch;
-            _iPlayerWatch.canceled += GameManager.Instance.Player.ToggleWatch;
-            
-            _iPlayerInteract.started += GameManager.Instance.Player.Interact;
-            
-            _iUIPause.performed += UIManager.Instance.PauseGame;
-            _iUIDebugInfo.performed += DebugManager.Instance.ToggleDebugInfo;
-            
-            _iDebugHauntLightsOff.started += HauntManager.Instance.ForceLightsOffHaunt;
-            _iDebugHauntClockChime.started += HauntManager.Instance.ForceClockChimeHaunt;
-
             var rebinds = PlayerPrefs.GetString("rebinds", string.Empty);
             if (string.IsNullOrEmpty(rebinds)) return;
             _controls.LoadBindingOverridesFromJson(rebinds);
         }
-        
+
         #endregion
 
         #region - UNITY OnEnable & OnDisable -
@@ -127,6 +99,8 @@ namespace Inputs
 
         private void OnDisable()
         {
+            if (Instance != this) return;
+            
             _iPlayerMove.Disable();
             _iPlayerCrouch.Disable();
             _iPlayerLeanLeft.Disable();
@@ -149,6 +123,44 @@ namespace Inputs
         private void Update()
         {
             MovementVector = _iPlayerMove.ReadValue<Vector3>();
+        }
+        
+        #endregion
+        
+        #region - In-Game Initialising -
+
+        public void InitialiseInMenu()
+        {
+            _iUIPause.performed += TitleManager.Instance.ToggleSettings;
+        }
+
+        public void InitialiseInGame()
+        {
+            _iPlayerCrouch.performed += GameManager.Instance.Player.Crouch;
+            _iPlayerCrouch.canceled += GameManager.Instance.Player.PrepareStand;
+            
+            _iPlayerLeanLeft.started += GameManager.Instance.Player.LeanLeft;
+            _iPlayerLeanLeft.canceled += GameManager.Instance.Player.StopLeaning;
+            
+            _iPlayerLeanRight.started += GameManager.Instance.Player.LeanRight;
+            _iPlayerLeanRight.canceled += GameManager.Instance.Player.StopLeaning;
+            
+            _iPlayerBlink.started += GameManager.Instance.Player.Blink;
+            _iPlayerBlink.started += UIManager.Instance.Blink;
+            _iPlayerBlink.canceled += GameManager.Instance.Player.StopBlinking;
+            _iPlayerBlink.canceled += UIManager.Instance.StopBlinking;
+            
+            _iPlayerWatch.started += GameManager.Instance.Player.ToggleWatch;
+            _iPlayerWatch.canceled += GameManager.Instance.Player.ToggleWatch;
+            
+            _iPlayerInteract.started += GameManager.Instance.Player.Interact;
+            
+            _iUIPause.performed -= TitleManager.Instance.ToggleSettings;
+            _iUIPause.performed += UIManager.Instance.PauseGame;
+            _iUIDebugInfo.performed += DebugManager.Instance.ToggleDebugInfo;
+            
+            _iDebugHauntLightsOff.started += HauntManager.Instance.ForceLightsOffHaunt;
+            _iDebugHauntClockChime.started += HauntManager.Instance.ForceClockChimeHaunt;
         }
         
         #endregion

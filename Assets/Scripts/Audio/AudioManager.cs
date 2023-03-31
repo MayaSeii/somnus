@@ -3,6 +3,7 @@ using FMOD.Studio;
 using FMODUnity;
 using General;
 using UnityEngine;
+using STOP_MODE = FMOD.Studio.STOP_MODE;
 
 namespace Audio
 {
@@ -21,16 +22,14 @@ namespace Audio
         private Bus _soundBus;
         private Bus _ambienceBus;
         private Bus _interfaceBus;
-
-        public EventInstance RandomMusicInstance { get; private set; }
-        private List<EventInstance> _eventInstances;
+        
+        public Dictionary<string, EventInstance> EventInstances { get; private set; }
 
         private void Awake()
         {
-            if (Instance != null) Debug.LogError("Found more than one Audio Manager in the scene.");
             Instance = this;
 
-            _eventInstances = new List<EventInstance>();
+            EventInstances = new  Dictionary<string, EventInstance>();
 
             _masterBus = RuntimeManager.GetBus("bus:/");
             _musicBus = RuntimeManager.GetBus("bus:/Music");
@@ -45,15 +44,6 @@ namespace Audio
             InterfaceVolume = .9f;
         }
 
-        private void Start()
-        {
-            //InitialiseAmbience(FMODEvents.Instance.LightHum);
-            InitialiseAmbience(FMODEvents.Instance.DeepHum);
-            
-            InitialiseAmbience(FMODEvents.Instance.GameStart);
-            RandomMusicInstance = InitialiseAmbience(FMODEvents.Instance.RandomMusic);
-        }
-
         private void Update()
         {
             _masterBus.setVolume(MasterVolume);
@@ -63,13 +53,25 @@ namespace Audio
             _interfaceBus.setVolume(InterfaceVolume);
         }
 
-        private EventInstance InitialiseAmbience(EventReference sound)
+        public void InitialiseInMenu()
         {
-            var instance = CreateEventInstance(sound);
-            RuntimeManager.AttachInstanceToGameObject(instance, GameManager.Instance.Player.transform);
-            instance.start();
-            
-            return instance;
+            InitialiseAmbience("DeepHum", FMODEvents.Instance.DeepHum);
+            InitialiseAmbience("MenuAmbience", FMODEvents.Instance.TitlePiano);
+        }
+
+        public void InitialiseInGame()
+        {
+            InitialiseAmbience("GameStart", FMODEvents.Instance.GameStart);
+            InitialiseAmbience("RandomMusic", FMODEvents.Instance.RandomMusic);
+            InitialiseAmbience("MenuBuzz", FMODEvents.Instance.MenuBuzz, true);
+            InitialiseAmbience("Footsteps", FMODEvents.Instance.Footsteps, true);
+        }
+
+        private void InitialiseAmbience(string title, EventReference sound, bool stop = false)
+        {
+            var instance = CreateEventInstance(title, sound);
+            RuntimeManager.AttachInstanceToGameObject(instance, GameManager.Instance.MainCamera.transform);
+            if (!stop) instance.start();
         }
 
         public static void ChangeParameter(EventInstance ei, string parameterName, float parameterValue)
@@ -82,19 +84,19 @@ namespace Audio
             RuntimeManager.PlayOneShot(sound, worldPos);
         }
 
-        public EventInstance CreateEventInstance(EventReference sound)
+        private EventInstance CreateEventInstance(string title, EventReference sound)
         {
             var eventInstance = RuntimeManager.CreateInstance(sound);
-            _eventInstances.Add(eventInstance);
+            EventInstances.Add(title, eventInstance);
             return eventInstance;
         }
 
         private void CleanUp()
         {
-            foreach (var ei in _eventInstances)
+            foreach (var ei in EventInstances)
             {
-                ei.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
-                ei.release();
+                ei.Value.stop(STOP_MODE.IMMEDIATE);
+                ei.Value.release();
             }
         }
 

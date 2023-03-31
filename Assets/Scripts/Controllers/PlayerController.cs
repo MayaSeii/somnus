@@ -5,7 +5,6 @@ using UnityEngine.InputSystem;
 using Quaternion = UnityEngine.Quaternion;
 using Vector3 = UnityEngine.Vector3;
 using FMOD.Studio;
-using FMODUnity;
 using General;
 using Inputs;
 using Objects;
@@ -92,7 +91,7 @@ namespace Controllers
         [field: SerializeField, Header("Interacting")] public LayerMask InteractionLayerMask { get; set; }
         [field: SerializeField] public float InteractionDistance { get; set; }
         
-        public Collider InteractableInRange { get; set; }
+        public Collider InteractableInRange { get; private set; }
         
         #endregion
         
@@ -129,8 +128,7 @@ namespace Controllers
             _targetArmRotation = RestingArmRotation;
             _targetArmPosition = RestingArmPosition;
 
-            _footstepsInstance = AudioManager.Instance.CreateEventInstance(FMODEvents.Instance.Footsteps);
-            RuntimeManager.AttachInstanceToGameObject(_footstepsInstance, transform, _rb);
+            _footstepsInstance = AudioManager.Instance.EventInstances["Footsteps"];
             AudioManager.ChangeParameter(_footstepsInstance, "footstepFrequency", .8f);
 
             _sin = _cameraHeight;
@@ -349,7 +347,7 @@ namespace Controllers
         {
             Physics.Raycast(CameraTransform.position, CameraTransform.forward, out var ray, InteractionDistance, InteractionLayerMask);
             InteractableInRange = ray.distance > 0 ? ray.collider : null;
-            DebugManager.Instance.UpdateCurrentInteractable(ray.distance > 0 ? ray.collider.name : "None");
+            if (DebugManager.Instance.gameObject.activeInHierarchy) DebugManager.Instance.UpdateCurrentInteractable(ray.distance > 0 ? ray.collider.name : "None");
         }
 
         public void Interact(InputAction.CallbackContext context)
@@ -397,7 +395,7 @@ namespace Controllers
             HeldObject.transform.position = camTransform.position + camTransform.forward * .5f;
         }
 
-        public void ThrowHeldObject()
+        private void ThrowHeldObject()
         {
             HeldObject.GetComponent<Collider>().enabled = true;
             

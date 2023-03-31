@@ -12,6 +12,7 @@ TagManager:
   - UI Canvas
   - Interaction Point
   - Clock
+  - Gameplay UI
   layers:
   - Default
   - TransparentFX
@@ -26,8 +27,8 @@ TagManager:
   - Interactable
   - Furniture
   - Held Object
-  - 
-  - 
+  - Gameplay UI
+  - Interface
   - 
   - 
   - 
