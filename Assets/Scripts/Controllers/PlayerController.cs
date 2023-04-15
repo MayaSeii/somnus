@@ -168,7 +168,7 @@ namespace Controllers
         private static void EnterRoomArea(Component other)
         {
             var roomController = other.transform.GetComponentInParent<RoomController>();
-            DebugManager.Instance.UpdateCurrentRoom(roomController.RoomName);
+            roomController.EnterRoom();
         }
 
         #endregion

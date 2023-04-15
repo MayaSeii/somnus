@@ -1,18 +1,20 @@
 using Audio;
-using General;
 using Inputs;
 using Settings;
 using UnityEngine;
 
-public class Initialiser : MonoBehaviour
+namespace General
 {
-    private void Awake()
+    public class Initialiser : MonoBehaviour
     {
-        if (!GameManager.Instance) return;
+        private void Awake()
+        {
+            if (!GameManager.Instance) return;
         
-        GameManager.Instance.InitialiseInGame();
-        ControlsManager.Instance.InitialiseInGame();
-        AudioManager.Instance.InitialiseInGame();
-        Config.ResetConfigs();
+            GameManager.Instance.InitialiseInGame();
+            ControlsManager.Instance.InitialiseInGame();
+            AudioManager.Instance.InitialiseInGame();
+            Config.ResetConfigs();
+        }
     }
 }

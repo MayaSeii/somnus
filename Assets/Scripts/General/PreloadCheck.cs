@@ -1,9 +1,12 @@
 using UnityEngine;
 
-public class PreloadCheck : MonoBehaviour
+namespace General
 {
-    private void Awake()
+    public class PreloadCheck : MonoBehaviour
     {
-        if (!GameObject.Find("__app")) UnityEngine.SceneManagement.SceneManager.LoadScene("_preload");
+        private void Awake()
+        {
+            if (!GameObject.Find("__app")) UnityEngine.SceneManagement.SceneManager.LoadScene("_preload");
+        }
     }
 }

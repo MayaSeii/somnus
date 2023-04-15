@@ -306,6 +306,33 @@ public partial class @Controls : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Spawn - Father"",
+                    ""type"": ""Button"",
+                    ""id"": ""e20c0b1f-750b-4acf-84c6-7304024c7f84"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Spawn - Mother"",
+                    ""type"": ""Button"",
+                    ""id"": ""a304490c-dc10-4723-8e41-43845ed560ac"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Spawn - Daughter"",
+                    ""type"": ""Button"",
+                    ""id"": ""f11c8757-a7a1-4496-9a3e-b1d50f22f1a3"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -330,6 +357,105 @@ public partial class @Controls : IInputActionCollection2, IDisposable
                     ""action"": ""Haunt - Clock Chime"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""One Modifier"",
+                    ""id"": ""cb6efc1d-0593-4509-b313-d21c258cef9e"",
+                    ""path"": ""OneModifier"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Spawn - Father"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""modifier"",
+                    ""id"": ""55d2f48e-5bc2-4381-8436-de29953711cc"",
+                    ""path"": ""<Keyboard>/shift"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""KeyboardMouse"",
+                    ""action"": ""Spawn - Father"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""binding"",
+                    ""id"": ""69f7bdf3-a356-49a7-9e3d-4337d0b7e321"",
+                    ""path"": ""<Keyboard>/f"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""KeyboardMouse"",
+                    ""action"": ""Spawn - Father"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""One Modifier"",
+                    ""id"": ""9c1b3a91-cae6-4bf5-a069-cec221dbe152"",
+                    ""path"": ""OneModifier"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Spawn - Mother"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""modifier"",
+                    ""id"": ""f004d8b8-8036-4d4a-aa7b-082faf8afcaf"",
+                    ""path"": ""<Keyboard>/shift"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""KeyboardMouse"",
+                    ""action"": ""Spawn - Mother"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""binding"",
+                    ""id"": ""bbd987d7-7982-417c-9bd0-2ac924212577"",
+                    ""path"": ""<Keyboard>/m"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""KeyboardMouse"",
+                    ""action"": ""Spawn - Mother"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""One Modifier"",
+                    ""id"": ""21531326-98ad-4bf5-8064-bba8537641f7"",
+                    ""path"": ""OneModifier"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Spawn - Daughter"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""modifier"",
+                    ""id"": ""e0d97686-2f36-450b-978a-16623e749cd7"",
+                    ""path"": ""<Keyboard>/shift"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""KeyboardMouse"",
+                    ""action"": ""Spawn - Daughter"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""binding"",
+                    ""id"": ""04e42c62-5faa-4e77-9949-8f787027c81e"",
+                    ""path"": ""<Keyboard>/d"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""KeyboardMouse"",
+                    ""action"": ""Spawn - Daughter"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
                 }
             ]
         }
@@ -370,6 +496,9 @@ public partial class @Controls : IInputActionCollection2, IDisposable
         m_Debug = asset.FindActionMap("Debug", throwIfNotFound: true);
         m_Debug_HauntLightsOff = m_Debug.FindAction("Haunt - Lights Off", throwIfNotFound: true);
         m_Debug_HauntClockChime = m_Debug.FindAction("Haunt - Clock Chime", throwIfNotFound: true);
+        m_Debug_SpawnFather = m_Debug.FindAction("Spawn - Father", throwIfNotFound: true);
+        m_Debug_SpawnMother = m_Debug.FindAction("Spawn - Mother", throwIfNotFound: true);
+        m_Debug_SpawnDaughter = m_Debug.FindAction("Spawn - Daughter", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -553,12 +682,18 @@ public partial class @Controls : IInputActionCollection2, IDisposable
     private IDebugActions m_DebugActionsCallbackInterface;
     private readonly InputAction m_Debug_HauntLightsOff;
     private readonly InputAction m_Debug_HauntClockChime;
+    private readonly InputAction m_Debug_SpawnFather;
+    private readonly InputAction m_Debug_SpawnMother;
+    private readonly InputAction m_Debug_SpawnDaughter;
     public struct DebugActions
     {
         private @Controls m_Wrapper;
         public DebugActions(@Controls wrapper) { m_Wrapper = wrapper; }
         public InputAction @HauntLightsOff => m_Wrapper.m_Debug_HauntLightsOff;
         public InputAction @HauntClockChime => m_Wrapper.m_Debug_HauntClockChime;
+        public InputAction @SpawnFather => m_Wrapper.m_Debug_SpawnFather;
+        public InputAction @SpawnMother => m_Wrapper.m_Debug_SpawnMother;
+        public InputAction @SpawnDaughter => m_Wrapper.m_Debug_SpawnDaughter;
         public InputActionMap Get() { return m_Wrapper.m_Debug; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -574,6 +709,15 @@ public partial class @Controls : IInputActionCollection2, IDisposable
                 @HauntClockChime.started -= m_Wrapper.m_DebugActionsCallbackInterface.OnHauntClockChime;
                 @HauntClockChime.performed -= m_Wrapper.m_DebugActionsCallbackInterface.OnHauntClockChime;
                 @HauntClockChime.canceled -= m_Wrapper.m_DebugActionsCallbackInterface.OnHauntClockChime;
+                @SpawnFather.started -= m_Wrapper.m_DebugActionsCallbackInterface.OnSpawnFather;
+                @SpawnFather.performed -= m_Wrapper.m_DebugActionsCallbackInterface.OnSpawnFather;
+                @SpawnFather.canceled -= m_Wrapper.m_DebugActionsCallbackInterface.OnSpawnFather;
+                @SpawnMother.started -= m_Wrapper.m_DebugActionsCallbackInterface.OnSpawnMother;
+                @SpawnMother.performed -= m_Wrapper.m_DebugActionsCallbackInterface.OnSpawnMother;
+                @SpawnMother.canceled -= m_Wrapper.m_DebugActionsCallbackInterface.OnSpawnMother;
+                @SpawnDaughter.started -= m_Wrapper.m_DebugActionsCallbackInterface.OnSpawnDaughter;
+                @SpawnDaughter.performed -= m_Wrapper.m_DebugActionsCallbackInterface.OnSpawnDaughter;
+                @SpawnDaughter.canceled -= m_Wrapper.m_DebugActionsCallbackInterface.OnSpawnDaughter;
             }
             m_Wrapper.m_DebugActionsCallbackInterface = instance;
             if (instance != null)
@@ -584,6 +728,15 @@ public partial class @Controls : IInputActionCollection2, IDisposable
                 @HauntClockChime.started += instance.OnHauntClockChime;
                 @HauntClockChime.performed += instance.OnHauntClockChime;
                 @HauntClockChime.canceled += instance.OnHauntClockChime;
+                @SpawnFather.started += instance.OnSpawnFather;
+                @SpawnFather.performed += instance.OnSpawnFather;
+                @SpawnFather.canceled += instance.OnSpawnFather;
+                @SpawnMother.started += instance.OnSpawnMother;
+                @SpawnMother.performed += instance.OnSpawnMother;
+                @SpawnMother.canceled += instance.OnSpawnMother;
+                @SpawnDaughter.started += instance.OnSpawnDaughter;
+                @SpawnDaughter.performed += instance.OnSpawnDaughter;
+                @SpawnDaughter.canceled += instance.OnSpawnDaughter;
             }
         }
     }
@@ -616,5 +769,8 @@ public partial class @Controls : IInputActionCollection2, IDisposable
     {
         void OnHauntLightsOff(InputAction.CallbackContext context);
         void OnHauntClockChime(InputAction.CallbackContext context);
+        void OnSpawnFather(InputAction.CallbackContext context);
+        void OnSpawnMother(InputAction.CallbackContext context);
+        void OnSpawnDaughter(InputAction.CallbackContext context);
     }
 }
