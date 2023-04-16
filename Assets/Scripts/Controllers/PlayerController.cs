@@ -7,9 +7,11 @@ using Vector3 = UnityEngine.Vector3;
 using FMOD.Studio;
 using General;
 using Inputs;
+using Nightmares;
 using Objects;
 using Settings;
 using UI;
+using UnityEngine.Serialization;
 using STOP_MODE = FMOD.Studio.STOP_MODE;
 
 namespace Controllers
@@ -26,6 +28,8 @@ namespace Controllers
         private float _cameraHeight;
         private float _speed;
 
+        private bool _canMove;
+
         private EventInstance _footstepsInstance;
     
         #endregion
@@ -40,7 +44,7 @@ namespace Controllers
     
         #region - VAR Blinking & Rest -
 
-        private float _restAchieved;
+        public float RestAchieved { get; set; }
         private bool _isBlinking;
     
         #endregion
@@ -119,6 +123,8 @@ namespace Controllers
     
         private void Start()
         {
+            _canMove = true;
+            
             _rb = GetComponent<Rigidbody>();
             _collider = GetComponent<CapsuleCollider>();
         
@@ -140,6 +146,8 @@ namespace Controllers
 
         private void Update()
         {
+            if (!_canMove) return;
+            
             UpdateRest();
             UpdateInteractionArea();
             UpdateSounds();
@@ -149,6 +157,8 @@ namespace Controllers
 
         private void FixedUpdate()
         {
+            if (!_canMove) return;
+            
             UpdateLean();
             UpdateMovement();
             UpdateCrouching();
@@ -163,12 +173,20 @@ namespace Controllers
         private void OnTriggerEnter(Collider other)
         {
             if (other.CompareTag("Room Area")) EnterRoomArea(other);
+            if (other.CompareTag("Nightmare")) StartJumpscare(other);
         }
 
         private static void EnterRoomArea(Component other)
         {
             var roomController = other.transform.GetComponentInParent<RoomController>();
             roomController.EnterRoom();
+        }
+
+        private void StartJumpscare(Component other)
+        {
+            _canMove = false;
+            var nightmareController = other.GetComponent<NightmareController>();
+            nightmareController.Jumpscare();
         }
 
         #endregion
@@ -197,6 +215,11 @@ namespace Controllers
             var position = CameraTransform.position;
             return new Vector3(position.x, _cameraHeight, position.z);
         }
+
+        public void Stop()
+        {
+            _canMove = false;
+        }
     
         #endregion
     
@@ -216,8 +239,8 @@ namespace Controllers
         {
             if (!_isBlinking) return;
         
-            _restAchieved += Time.deltaTime;
-            UIManager.Instance.UpdateRestMeter(_restAchieved);
+            RestAchieved += Time.deltaTime;
+            UIManager.Instance.UpdateRestMeter(RestAchieved);
         }
     
         #endregion

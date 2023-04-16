@@ -1,9 +1,11 @@
 using System;
+using System.Collections;
 using System.Linq;
 using Audio;
 using FMOD.Studio;
 using General;
 using Inputs;
+using Nightmares;
 using Settings;
 using TMPro;
 using UnityEngine;
@@ -20,6 +22,7 @@ namespace UI
         #region - VAR Interface Elements -
         
         [field: SerializeField, Header("Interface Elements")] public GameObject Crosshair { get; private set; }
+        public GameObject Fader { get; private set; }
         
         #endregion
         
@@ -76,6 +79,8 @@ namespace UI
         {
             if (Instance != null) Debug.LogError("Found more than one UI Manager in the scene.");
             Instance = this;
+            
+            Fader = GameObject.FindWithTag("Fader");
         }
     
         #endregion
@@ -192,7 +197,24 @@ namespace UI
         public void UpdateRestMeter(float value)
         {
             RestMeter.value = Mathf.Clamp(value, RestMeter.minValue, RestMeter.maxValue);
-            ArmRestMeter.value = Mathf.Clamp(value, RestMeter.minValue, RestMeter.maxValue);
+            ArmRestMeter.value = Mathf.Clamp(value, ArmRestMeter.minValue, ArmRestMeter.maxValue);
+
+            if (!(RestMeter.value >= RestMeter.maxValue)) return;
+            
+            GameManager.Instance.Player.Stop();
+            foreach (var n in FindObjectsOfType<NightmareController>()) Destroy(n);
+            
+            StartCoroutine(FadeOut());
+        }
+        
+        public static IEnumerator FadeOut()
+        {
+            yield return new WaitForSeconds(3f);
+            Instance.Fader.SetActive(true);
+            Instance.Fader.GetComponent<Fader>().TargetAlpha = 1f;
+            
+            yield return new WaitForSeconds(4f);
+            GameManager.ReturnToMenu();
         }
     
         #endregion

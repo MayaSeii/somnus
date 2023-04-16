@@ -20,6 +20,7 @@ namespace Haunts
         [field: Header("Haunts")]
         [field: SerializeField] public LightsOffHaunt LightsOffHaunt { get; set; }
         [field: SerializeField] public ClockChimeHaunt ClockChimeHaunt { get; set; }
+        [field: SerializeField] public TVOnHaunt TVOnHaunt { get; set; }
 
         private void Awake()
         {
@@ -31,7 +32,7 @@ namespace Haunts
         {
             if (_fatherInstance == null)
             {
-                _fatherInstance = Instantiate(Father, new Vector3(0f, -0.145f, 12f), Quaternion.identity);
+                _fatherInstance = Instantiate(Father, new Vector3(0f, -0.145f, 12f), Quaternion.Euler(0f, 180f, 0f));
             }
             else
             {
@@ -76,6 +77,12 @@ namespace Haunts
         {
             ExecuteHaunt(ClockChimeHaunt);
             DebugManager.Instance.UpdateLastHaunt("Clock Chime (F)");
+        }
+        
+        public void ForceTVOnHaunt(InputAction.CallbackContext context)
+        {
+            ExecuteHaunt(TVOnHaunt);
+            DebugManager.Instance.UpdateLastHaunt("TV On (F)");
         }
 
         private static void ExecuteHaunt(Haunt haunt)

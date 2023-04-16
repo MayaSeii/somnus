@@ -28,6 +28,7 @@ public class TitleManager : MonoBehaviour
         GameManager.Instance.InitialiseInMenu();
         AudioManager.Instance.InitialiseInMenu();
         ControlsManager.Instance.InitialiseInMenu();
+        Resources.UnloadUnusedAssets();
     }
 
     private static void InitialiseCursor()

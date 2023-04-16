@@ -86,6 +86,8 @@ namespace Audio
 
         private EventInstance CreateEventInstance(string title, EventReference sound)
         {
+            if (EventInstances.ContainsKey(title)) EventInstances.Remove(title);
+            
             var eventInstance = RuntimeManager.CreateInstance(sound);
             EventInstances.Add(title, eventInstance);
             return eventInstance;

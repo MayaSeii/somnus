@@ -24,6 +24,9 @@ namespace UI
         {
             if (Instance != null) Debug.LogError("Found more than one UI Manager in the scene.");
             Instance = this;
+            
+            Cursor.visible = true;
+            Cursor.lockState = CursorLockMode.None;
         }
     
         #endregion

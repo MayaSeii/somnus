@@ -328,6 +328,13 @@ MonoBehaviour:
       Data3: -412396648
       Data4: 422011214
     Path: event:/SFX/PaperBallHit
+  <Jumpscare>k__BackingField:
+    Guid:
+      Data1: 1998734693
+      Data2: 1179448688
+      Data3: 24212102
+      Data4: 1993618856
+    Path: event:/SFX/Jumpscare
 --- !u!1 &534698798
 GameObject:
   m_ObjectHideFlags: 0

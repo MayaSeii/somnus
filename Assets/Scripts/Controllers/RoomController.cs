@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using General;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Controllers
 {
@@ -12,10 +13,10 @@ namespace Controllers
         [field: SerializeField] public string RoomName { get; private set; }
         [field: SerializeField] public List<Collider> Areas { get; private set; }
         [field: SerializeField] public List<Light> CeilingLamps { get; private set; }
+
+        public bool PlayerInRoom { get; set; }
         
         public float PresenceTimer { get; private set; }
-
-        private bool _playerInRoom;
 
         private void Awake()
         {
@@ -25,7 +26,7 @@ namespace Controllers
 
         private void Update()
         {
-            if (_playerInRoom)
+            if (PlayerInRoom)
             {
                 PresenceTimer = Mathf.Min(PresenceTimer + Time.deltaTime, 200f);
                 DebugManager.Instance.UpdateCurrentRoom($"{RoomName} ({PresenceTimer:0.00})");
@@ -36,12 +37,12 @@ namespace Controllers
         public void EnterRoom()
         {
             _instances.ForEach(i => i.ExitRoom());
-            _playerInRoom = true;
+            PlayerInRoom = true;
         }
 
         private void ExitRoom()
         {
-            _playerInRoom = false;
+            PlayerInRoom = false;
         }
     }
 }

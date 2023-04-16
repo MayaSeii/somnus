@@ -286,6 +286,15 @@
                     "initialStateCheck": false
                 },
                 {
+                    "name": "Haunt - TV On",
+                    "type": "Button",
+                    "id": "80c159f2-0e8f-41c0-90c3-d300602b2a3a",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "Spawn - Father",
                     "type": "Button",
                     "id": "e20c0b1f-750b-4acf-84c6-7304024c7f84",
@@ -307,6 +316,15 @@
                     "name": "Spawn - Daughter",
                     "type": "Button",
                     "id": "f11c8757-a7a1-4496-9a3e-b1d50f22f1a3",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Cheat - Sleep",
+                    "type": "Button",
+                    "id": "2e56e937-fb3d-498d-a0af-79cdc7d35195",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -432,6 +450,50 @@
                     "processors": "",
                     "groups": "KeyboardMouse",
                     "action": "Spawn - Daughter",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "",
+                    "id": "9a54e277-b02a-4e8b-b85a-90d33f3c74a0",
+                    "path": "<Keyboard>/numpad3",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Haunt - TV On",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "One Modifier",
+                    "id": "729ee542-e9b5-47c9-9836-0242d5ef3855",
+                    "path": "OneModifier",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Cheat - Sleep",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "modifier",
+                    "id": "bb991000-c2d0-43b4-97a9-3dc0fddc253b",
+                    "path": "<Keyboard>/shift",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "KeyboardMouse",
+                    "action": "Cheat - Sleep",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "binding",
+                    "id": "7c4a0d08-be8d-489e-a32d-2ecd93235e16",
+                    "path": "<Keyboard>/p",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "KeyboardMouse",
+                    "action": "Cheat - Sleep",
                     "isComposite": false,
                     "isPartOfComposite": true
                 }

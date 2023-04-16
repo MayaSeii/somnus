@@ -1,5 +1,7 @@
 using Controllers;
+using Inputs;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace General
 {
@@ -26,6 +28,12 @@ namespace General
             Player = FindObjectOfType<PlayerController>();
             MainCamera = Camera.main;
             GameplayUICamera = GameObject.FindWithTag("Gameplay UI").GetComponent<Canvas>().worldCamera;
+        }
+
+        public static void ReturnToMenu()
+        {
+            ControlsManager.Instance.Unregister();
+            SceneManager.LoadScene(1);
         }
     }
 }

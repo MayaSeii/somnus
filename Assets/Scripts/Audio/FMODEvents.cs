@@ -45,6 +45,9 @@ namespace Audio
         [field: Header("Paper Ball")]
         [field: SerializeField] public EventReference PaperBallGrab { get; private set; }
         [field: SerializeField] public EventReference PaperBallHit { get; private set; }
+    
+        [field: Header("Jumpscare")]
+        [field: SerializeField] public EventReference Jumpscare { get; private set; }
 
         private void Awake()
         {

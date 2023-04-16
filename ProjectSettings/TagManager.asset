@@ -13,6 +13,9 @@ TagManager:
   - Interaction Point
   - Clock
   - Gameplay UI
+  - Patrol Point
+  - Nightmare
+  - Fader
   layers:
   - Default
   - TransparentFX
@@ -29,8 +32,8 @@ TagManager:
   - Held Object
   - Gameplay UI
   - Interface
-  - 
-  - 
+  - TV
+  - Door
   - 
   - 
   - 

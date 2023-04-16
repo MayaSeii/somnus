@@ -308,6 +308,15 @@ public partial class @Controls : IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
+                    ""name"": ""Haunt - TV On"",
+                    ""type"": ""Button"",
+                    ""id"": ""80c159f2-0e8f-41c0-90c3-d300602b2a3a"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
                     ""name"": ""Spawn - Father"",
                     ""type"": ""Button"",
                     ""id"": ""e20c0b1f-750b-4acf-84c6-7304024c7f84"",
@@ -329,6 +338,15 @@ public partial class @Controls : IInputActionCollection2, IDisposable
                     ""name"": ""Spawn - Daughter"",
                     ""type"": ""Button"",
                     ""id"": ""f11c8757-a7a1-4496-9a3e-b1d50f22f1a3"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Cheat - Sleep"",
+                    ""type"": ""Button"",
+                    ""id"": ""2e56e937-fb3d-498d-a0af-79cdc7d35195"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
@@ -456,6 +474,50 @@ public partial class @Controls : IInputActionCollection2, IDisposable
                     ""action"": ""Spawn - Daughter"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""9a54e277-b02a-4e8b-b85a-90d33f3c74a0"",
+                    ""path"": ""<Keyboard>/numpad3"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Haunt - TV On"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""One Modifier"",
+                    ""id"": ""729ee542-e9b5-47c9-9836-0242d5ef3855"",
+                    ""path"": ""OneModifier"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Cheat - Sleep"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""modifier"",
+                    ""id"": ""bb991000-c2d0-43b4-97a9-3dc0fddc253b"",
+                    ""path"": ""<Keyboard>/shift"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""KeyboardMouse"",
+                    ""action"": ""Cheat - Sleep"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""binding"",
+                    ""id"": ""7c4a0d08-be8d-489e-a32d-2ecd93235e16"",
+                    ""path"": ""<Keyboard>/p"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""KeyboardMouse"",
+                    ""action"": ""Cheat - Sleep"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
                 }
             ]
         }
@@ -496,9 +558,11 @@ public partial class @Controls : IInputActionCollection2, IDisposable
         m_Debug = asset.FindActionMap("Debug", throwIfNotFound: true);
         m_Debug_HauntLightsOff = m_Debug.FindAction("Haunt - Lights Off", throwIfNotFound: true);
         m_Debug_HauntClockChime = m_Debug.FindAction("Haunt - Clock Chime", throwIfNotFound: true);
+        m_Debug_HauntTVOn = m_Debug.FindAction("Haunt - TV On", throwIfNotFound: true);
         m_Debug_SpawnFather = m_Debug.FindAction("Spawn - Father", throwIfNotFound: true);
         m_Debug_SpawnMother = m_Debug.FindAction("Spawn - Mother", throwIfNotFound: true);
         m_Debug_SpawnDaughter = m_Debug.FindAction("Spawn - Daughter", throwIfNotFound: true);
+        m_Debug_CheatSleep = m_Debug.FindAction("Cheat - Sleep", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -682,18 +746,22 @@ public partial class @Controls : IInputActionCollection2, IDisposable
     private IDebugActions m_DebugActionsCallbackInterface;
     private readonly InputAction m_Debug_HauntLightsOff;
     private readonly InputAction m_Debug_HauntClockChime;
+    private readonly InputAction m_Debug_HauntTVOn;
     private readonly InputAction m_Debug_SpawnFather;
     private readonly InputAction m_Debug_SpawnMother;
     private readonly InputAction m_Debug_SpawnDaughter;
+    private readonly InputAction m_Debug_CheatSleep;
     public struct DebugActions
     {
         private @Controls m_Wrapper;
         public DebugActions(@Controls wrapper) { m_Wrapper = wrapper; }
         public InputAction @HauntLightsOff => m_Wrapper.m_Debug_HauntLightsOff;
         public InputAction @HauntClockChime => m_Wrapper.m_Debug_HauntClockChime;
+        public InputAction @HauntTVOn => m_Wrapper.m_Debug_HauntTVOn;
         public InputAction @SpawnFather => m_Wrapper.m_Debug_SpawnFather;
         public InputAction @SpawnMother => m_Wrapper.m_Debug_SpawnMother;
         public InputAction @SpawnDaughter => m_Wrapper.m_Debug_SpawnDaughter;
+        public InputAction @CheatSleep => m_Wrapper.m_Debug_CheatSleep;
         public InputActionMap Get() { return m_Wrapper.m_Debug; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -709,6 +777,9 @@ public partial class @Controls : IInputActionCollection2, IDisposable
                 @HauntClockChime.started -= m_Wrapper.m_DebugActionsCallbackInterface.OnHauntClockChime;
                 @HauntClockChime.performed -= m_Wrapper.m_DebugActionsCallbackInterface.OnHauntClockChime;
                 @HauntClockChime.canceled -= m_Wrapper.m_DebugActionsCallbackInterface.OnHauntClockChime;
+                @HauntTVOn.started -= m_Wrapper.m_DebugActionsCallbackInterface.OnHauntTVOn;
+                @HauntTVOn.performed -= m_Wrapper.m_DebugActionsCallbackInterface.OnHauntTVOn;
+                @HauntTVOn.canceled -= m_Wrapper.m_DebugActionsCallbackInterface.OnHauntTVOn;
                 @SpawnFather.started -= m_Wrapper.m_DebugActionsCallbackInterface.OnSpawnFather;
                 @SpawnFather.performed -= m_Wrapper.m_DebugActionsCallbackInterface.OnSpawnFather;
                 @SpawnFather.canceled -= m_Wrapper.m_DebugActionsCallbackInterface.OnSpawnFather;
@@ -718,6 +789,9 @@ public partial class @Controls : IInputActionCollection2, IDisposable
                 @SpawnDaughter.started -= m_Wrapper.m_DebugActionsCallbackInterface.OnSpawnDaughter;
                 @SpawnDaughter.performed -= m_Wrapper.m_DebugActionsCallbackInterface.OnSpawnDaughter;
                 @SpawnDaughter.canceled -= m_Wrapper.m_DebugActionsCallbackInterface.OnSpawnDaughter;
+                @CheatSleep.started -= m_Wrapper.m_DebugActionsCallbackInterface.OnCheatSleep;
+                @CheatSleep.performed -= m_Wrapper.m_DebugActionsCallbackInterface.OnCheatSleep;
+                @CheatSleep.canceled -= m_Wrapper.m_DebugActionsCallbackInterface.OnCheatSleep;
             }
             m_Wrapper.m_DebugActionsCallbackInterface = instance;
             if (instance != null)
@@ -728,6 +802,9 @@ public partial class @Controls : IInputActionCollection2, IDisposable
                 @HauntClockChime.started += instance.OnHauntClockChime;
                 @HauntClockChime.performed += instance.OnHauntClockChime;
                 @HauntClockChime.canceled += instance.OnHauntClockChime;
+                @HauntTVOn.started += instance.OnHauntTVOn;
+                @HauntTVOn.performed += instance.OnHauntTVOn;
+                @HauntTVOn.canceled += instance.OnHauntTVOn;
                 @SpawnFather.started += instance.OnSpawnFather;
                 @SpawnFather.performed += instance.OnSpawnFather;
                 @SpawnFather.canceled += instance.OnSpawnFather;
@@ -737,6 +814,9 @@ public partial class @Controls : IInputActionCollection2, IDisposable
                 @SpawnDaughter.started += instance.OnSpawnDaughter;
                 @SpawnDaughter.performed += instance.OnSpawnDaughter;
                 @SpawnDaughter.canceled += instance.OnSpawnDaughter;
+                @CheatSleep.started += instance.OnCheatSleep;
+                @CheatSleep.performed += instance.OnCheatSleep;
+                @CheatSleep.canceled += instance.OnCheatSleep;
             }
         }
     }
@@ -769,8 +849,10 @@ public partial class @Controls : IInputActionCollection2, IDisposable
     {
         void OnHauntLightsOff(InputAction.CallbackContext context);
         void OnHauntClockChime(InputAction.CallbackContext context);
+        void OnHauntTVOn(InputAction.CallbackContext context);
         void OnSpawnFather(InputAction.CallbackContext context);
         void OnSpawnMother(InputAction.CallbackContext context);
         void OnSpawnDaughter(InputAction.CallbackContext context);
+        void OnCheatSleep(InputAction.CallbackContext context);
     }
 }

@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 14da69f229224c9684b1eaa71fb3a793, type: 3}
+  m_Name: LastRoomToChase
+  m_EditorClassIdentifier: 
+  <Decision>k__BackingField: {fileID: 11400000, guid: 69a5af2d0afedfb45abb39a3d4a89f3c, type: 2}
+  <TrueState>k__BackingField: {fileID: 11400000, guid: c8eb5ed51f0ec3e468b9cb770fd21f90, type: 2}
+  <FalseState>k__BackingField: {fileID: 11400000, guid: be293114ad1cc1e47b7799fcf9103cc1, type: 2}

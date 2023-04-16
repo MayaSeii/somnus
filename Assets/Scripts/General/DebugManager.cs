@@ -48,6 +48,15 @@ namespace General
         {
             LastHaunt.text = $"Last Haunt: {text}";
         }
+        
+        #endregion
+        
+        #region - Cheats -
+
+        public static void CheatSleep(InputAction.CallbackContext context)
+        {
+            GameManager.Instance.Player.RestAchieved = 55f;
+        }
     
         #endregion
     }

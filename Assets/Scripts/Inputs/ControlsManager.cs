@@ -39,9 +39,13 @@ namespace Inputs
 
         private InputAction _iDebugHauntLightsOff;
         private InputAction _iDebugHauntClockChime;
+        private InputAction _iDebugHauntTVOn;
+        
         private InputAction _iDebugSpawnFather;
         private InputAction _iDebugSpawnMother;
         private InputAction _iDebugSpawnDaughter;
+        
+        private InputAction _iDebugCheatSleep;
         
         #endregion
 
@@ -66,9 +70,11 @@ namespace Inputs
 
             _iDebugHauntLightsOff = _controls.Debug.HauntLightsOff;
             _iDebugHauntClockChime = _controls.Debug.HauntClockChime;
+            _iDebugHauntTVOn = _controls.Debug.HauntTVOn;
             _iDebugSpawnFather = _controls.Debug.SpawnFather;
             _iDebugSpawnMother = _controls.Debug.SpawnMother;
             _iDebugSpawnDaughter = _controls.Debug.SpawnDaughter;
+            _iDebugCheatSleep = _controls.Debug.CheatSleep;
         }
         
         #endregion
@@ -101,9 +107,11 @@ namespace Inputs
             
             _iDebugHauntLightsOff.Enable();
             _iDebugHauntClockChime.Enable();
+            _iDebugHauntTVOn.Enable();
             _iDebugSpawnFather.Enable();
             _iDebugSpawnMother.Enable();
             _iDebugSpawnDaughter.Enable();
+            _iDebugCheatSleep.Enable();
         }
 
         private void OnDisable()
@@ -123,9 +131,11 @@ namespace Inputs
             
             _iDebugHauntLightsOff.Disable();
             _iDebugHauntClockChime.Disable();
+            _iDebugHauntTVOn.Disable();
             _iDebugSpawnFather.Disable();
             _iDebugSpawnMother.Disable();
             _iDebugSpawnDaughter.Disable();
+            _iDebugCheatSleep.Disable();
         }
         
         #endregion
@@ -169,13 +179,49 @@ namespace Inputs
             
             _iUIPause.performed -= TitleManager.Instance.ToggleSettings;
             _iUIPause.performed += UIManager.Instance.PauseGame;
+            
             _iUIDebugInfo.performed += DebugManager.Instance.ToggleDebugInfo;
             
             _iDebugHauntLightsOff.started += HauntManager.Instance.ForceLightsOffHaunt;
             _iDebugHauntClockChime.started += HauntManager.Instance.ForceClockChimeHaunt;
+            _iDebugHauntTVOn.started += HauntManager.Instance.ForceTVOnHaunt;
             _iDebugSpawnFather.started += HauntManager.Instance.ForceSpawnFather;
             _iDebugSpawnMother.started += HauntManager.Instance.ForceSpawnMother;
             _iDebugSpawnDaughter.started += HauntManager.Instance.ForceSpawnDaughter;
+            _iDebugCheatSleep.started += DebugManager.CheatSleep;
+        }
+
+        public void Unregister()
+        {
+            _iPlayerCrouch.performed -= GameManager.Instance.Player.Crouch;
+            _iPlayerCrouch.canceled -= GameManager.Instance.Player.PrepareStand;
+            
+            _iPlayerLeanLeft.started -= GameManager.Instance.Player.LeanLeft;
+            _iPlayerLeanLeft.canceled -= GameManager.Instance.Player.StopLeaning;
+            
+            _iPlayerLeanRight.started -= GameManager.Instance.Player.LeanRight;
+            _iPlayerLeanRight.canceled -= GameManager.Instance.Player.StopLeaning;
+            
+            _iPlayerBlink.started -= GameManager.Instance.Player.Blink;
+            _iPlayerBlink.started -= UIManager.Instance.Blink;
+            _iPlayerBlink.canceled -= GameManager.Instance.Player.StopBlinking;
+            _iPlayerBlink.canceled -= UIManager.Instance.StopBlinking;
+            
+            _iPlayerWatch.started -= GameManager.Instance.Player.ToggleWatch;
+            _iPlayerWatch.canceled -= GameManager.Instance.Player.ToggleWatch;
+            
+            _iPlayerInteract.started -= GameManager.Instance.Player.Interact;
+            
+            _iUIPause.performed -= UIManager.Instance.PauseGame;
+            _iUIDebugInfo.performed -= DebugManager.Instance.ToggleDebugInfo;
+            
+            _iDebugHauntLightsOff.started -= HauntManager.Instance.ForceLightsOffHaunt;
+            _iDebugHauntClockChime.started -= HauntManager.Instance.ForceClockChimeHaunt;
+            _iDebugHauntTVOn.started -= HauntManager.Instance.ForceTVOnHaunt;
+            _iDebugSpawnFather.started -= HauntManager.Instance.ForceSpawnFather;
+            _iDebugSpawnMother.started -= HauntManager.Instance.ForceSpawnMother;
+            _iDebugSpawnDaughter.started -= HauntManager.Instance.ForceSpawnDaughter;
+            _iDebugCheatSleep.started -= DebugManager.CheatSleep;
         }
         
         #endregion
