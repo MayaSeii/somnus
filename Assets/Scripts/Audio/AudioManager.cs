@@ -73,6 +73,21 @@ namespace Audio
             RuntimeManager.AttachInstanceToGameObject(instance, GameManager.Instance.MainCamera.transform);
             if (!stop) instance.start();
         }
+        
+        public void InitialiseAmbience(string title, EventReference sound, Transform tf, bool stop = false)
+        {
+            var instance = CreateEventInstance(title, sound);
+            RuntimeManager.AttachInstanceToGameObject(instance, tf);
+            if (!stop) instance.start();
+        }
+        
+        public void StopAmbience(string title, STOP_MODE stopMode = STOP_MODE.IMMEDIATE)
+        {
+            if (!EventInstances.ContainsKey(title)) return;
+            
+            EventInstances[title].stop(stopMode);
+            EventInstances.Remove(title);
+        }
 
         public static void ChangeParameter(EventInstance ei, string parameterName, float parameterValue)
         {

@@ -21,6 +21,7 @@ namespace Haunts
         [field: SerializeField] public LightsOffHaunt LightsOffHaunt { get; set; }
         [field: SerializeField] public ClockChimeHaunt ClockChimeHaunt { get; set; }
         [field: SerializeField] public TVOnHaunt TVOnHaunt { get; set; }
+        [field: SerializeField] public KitchenPhoneHaunt KitchenPhoneHaunt { get; set; }
 
         private void Awake()
         {
@@ -83,6 +84,12 @@ namespace Haunts
         {
             ExecuteHaunt(TVOnHaunt);
             DebugManager.Instance.UpdateLastHaunt("TV On (F)");
+        }
+        
+        public void ForceKitchenPhoneHaunt(InputAction.CallbackContext context)
+        {
+            ExecuteHaunt(KitchenPhoneHaunt);
+            DebugManager.Instance.UpdateLastHaunt("Kitchen Phone (F)");
         }
 
         private static void ExecuteHaunt(Haunt haunt)

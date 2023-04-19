@@ -40,6 +40,7 @@ namespace Inputs
         private InputAction _iDebugHauntLightsOff;
         private InputAction _iDebugHauntClockChime;
         private InputAction _iDebugHauntTVOn;
+        private InputAction _iDebugHauntKitchenPhone;
         
         private InputAction _iDebugSpawnFather;
         private InputAction _iDebugSpawnMother;
@@ -71,6 +72,7 @@ namespace Inputs
             _iDebugHauntLightsOff = _controls.Debug.HauntLightsOff;
             _iDebugHauntClockChime = _controls.Debug.HauntClockChime;
             _iDebugHauntTVOn = _controls.Debug.HauntTVOn;
+            _iDebugHauntKitchenPhone = _controls.Debug.HauntKitchenPhone;
             _iDebugSpawnFather = _controls.Debug.SpawnFather;
             _iDebugSpawnMother = _controls.Debug.SpawnMother;
             _iDebugSpawnDaughter = _controls.Debug.SpawnDaughter;
@@ -108,6 +110,7 @@ namespace Inputs
             _iDebugHauntLightsOff.Enable();
             _iDebugHauntClockChime.Enable();
             _iDebugHauntTVOn.Enable();
+            _iDebugHauntKitchenPhone.Enable();
             _iDebugSpawnFather.Enable();
             _iDebugSpawnMother.Enable();
             _iDebugSpawnDaughter.Enable();
@@ -132,6 +135,7 @@ namespace Inputs
             _iDebugHauntLightsOff.Disable();
             _iDebugHauntClockChime.Disable();
             _iDebugHauntTVOn.Disable();
+            _iDebugHauntKitchenPhone.Disable();
             _iDebugSpawnFather.Disable();
             _iDebugSpawnMother.Disable();
             _iDebugSpawnDaughter.Disable();
@@ -185,6 +189,7 @@ namespace Inputs
             _iDebugHauntLightsOff.started += HauntManager.Instance.ForceLightsOffHaunt;
             _iDebugHauntClockChime.started += HauntManager.Instance.ForceClockChimeHaunt;
             _iDebugHauntTVOn.started += HauntManager.Instance.ForceTVOnHaunt;
+            _iDebugHauntKitchenPhone.started += HauntManager.Instance.ForceKitchenPhoneHaunt;
             _iDebugSpawnFather.started += HauntManager.Instance.ForceSpawnFather;
             _iDebugSpawnMother.started += HauntManager.Instance.ForceSpawnMother;
             _iDebugSpawnDaughter.started += HauntManager.Instance.ForceSpawnDaughter;
@@ -218,6 +223,7 @@ namespace Inputs
             _iDebugHauntLightsOff.started -= HauntManager.Instance.ForceLightsOffHaunt;
             _iDebugHauntClockChime.started -= HauntManager.Instance.ForceClockChimeHaunt;
             _iDebugHauntTVOn.started -= HauntManager.Instance.ForceTVOnHaunt;
+            _iDebugHauntKitchenPhone.started -= HauntManager.Instance.ForceKitchenPhoneHaunt;
             _iDebugSpawnFather.started -= HauntManager.Instance.ForceSpawnFather;
             _iDebugSpawnMother.started -= HauntManager.Instance.ForceSpawnMother;
             _iDebugSpawnDaughter.started -= HauntManager.Instance.ForceSpawnDaughter;

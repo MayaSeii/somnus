@@ -317,6 +317,15 @@ public partial class @Controls : IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
+                    ""name"": ""Haunt - Kitchen Phone"",
+                    ""type"": ""Button"",
+                    ""id"": ""cc2d5078-4eab-4569-8d9e-15435e883231"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
                     ""name"": ""Spawn - Father"",
                     ""type"": ""Button"",
                     ""id"": ""e20c0b1f-750b-4acf-84c6-7304024c7f84"",
@@ -518,6 +527,17 @@ public partial class @Controls : IInputActionCollection2, IDisposable
                     ""action"": ""Cheat - Sleep"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""0fe6d95f-5961-4f75-b836-addbc25376b5"",
+                    ""path"": ""<Keyboard>/numpad4"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Haunt - Kitchen Phone"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -559,6 +579,7 @@ public partial class @Controls : IInputActionCollection2, IDisposable
         m_Debug_HauntLightsOff = m_Debug.FindAction("Haunt - Lights Off", throwIfNotFound: true);
         m_Debug_HauntClockChime = m_Debug.FindAction("Haunt - Clock Chime", throwIfNotFound: true);
         m_Debug_HauntTVOn = m_Debug.FindAction("Haunt - TV On", throwIfNotFound: true);
+        m_Debug_HauntKitchenPhone = m_Debug.FindAction("Haunt - Kitchen Phone", throwIfNotFound: true);
         m_Debug_SpawnFather = m_Debug.FindAction("Spawn - Father", throwIfNotFound: true);
         m_Debug_SpawnMother = m_Debug.FindAction("Spawn - Mother", throwIfNotFound: true);
         m_Debug_SpawnDaughter = m_Debug.FindAction("Spawn - Daughter", throwIfNotFound: true);
@@ -747,6 +768,7 @@ public partial class @Controls : IInputActionCollection2, IDisposable
     private readonly InputAction m_Debug_HauntLightsOff;
     private readonly InputAction m_Debug_HauntClockChime;
     private readonly InputAction m_Debug_HauntTVOn;
+    private readonly InputAction m_Debug_HauntKitchenPhone;
     private readonly InputAction m_Debug_SpawnFather;
     private readonly InputAction m_Debug_SpawnMother;
     private readonly InputAction m_Debug_SpawnDaughter;
@@ -758,6 +780,7 @@ public partial class @Controls : IInputActionCollection2, IDisposable
         public InputAction @HauntLightsOff => m_Wrapper.m_Debug_HauntLightsOff;
         public InputAction @HauntClockChime => m_Wrapper.m_Debug_HauntClockChime;
         public InputAction @HauntTVOn => m_Wrapper.m_Debug_HauntTVOn;
+        public InputAction @HauntKitchenPhone => m_Wrapper.m_Debug_HauntKitchenPhone;
         public InputAction @SpawnFather => m_Wrapper.m_Debug_SpawnFather;
         public InputAction @SpawnMother => m_Wrapper.m_Debug_SpawnMother;
         public InputAction @SpawnDaughter => m_Wrapper.m_Debug_SpawnDaughter;
@@ -780,6 +803,9 @@ public partial class @Controls : IInputActionCollection2, IDisposable
                 @HauntTVOn.started -= m_Wrapper.m_DebugActionsCallbackInterface.OnHauntTVOn;
                 @HauntTVOn.performed -= m_Wrapper.m_DebugActionsCallbackInterface.OnHauntTVOn;
                 @HauntTVOn.canceled -= m_Wrapper.m_DebugActionsCallbackInterface.OnHauntTVOn;
+                @HauntKitchenPhone.started -= m_Wrapper.m_DebugActionsCallbackInterface.OnHauntKitchenPhone;
+                @HauntKitchenPhone.performed -= m_Wrapper.m_DebugActionsCallbackInterface.OnHauntKitchenPhone;
+                @HauntKitchenPhone.canceled -= m_Wrapper.m_DebugActionsCallbackInterface.OnHauntKitchenPhone;
                 @SpawnFather.started -= m_Wrapper.m_DebugActionsCallbackInterface.OnSpawnFather;
                 @SpawnFather.performed -= m_Wrapper.m_DebugActionsCallbackInterface.OnSpawnFather;
                 @SpawnFather.canceled -= m_Wrapper.m_DebugActionsCallbackInterface.OnSpawnFather;
@@ -805,6 +831,9 @@ public partial class @Controls : IInputActionCollection2, IDisposable
                 @HauntTVOn.started += instance.OnHauntTVOn;
                 @HauntTVOn.performed += instance.OnHauntTVOn;
                 @HauntTVOn.canceled += instance.OnHauntTVOn;
+                @HauntKitchenPhone.started += instance.OnHauntKitchenPhone;
+                @HauntKitchenPhone.performed += instance.OnHauntKitchenPhone;
+                @HauntKitchenPhone.canceled += instance.OnHauntKitchenPhone;
                 @SpawnFather.started += instance.OnSpawnFather;
                 @SpawnFather.performed += instance.OnSpawnFather;
                 @SpawnFather.canceled += instance.OnSpawnFather;
@@ -850,6 +879,7 @@ public partial class @Controls : IInputActionCollection2, IDisposable
         void OnHauntLightsOff(InputAction.CallbackContext context);
         void OnHauntClockChime(InputAction.CallbackContext context);
         void OnHauntTVOn(InputAction.CallbackContext context);
+        void OnHauntKitchenPhone(InputAction.CallbackContext context);
         void OnSpawnFather(InputAction.CallbackContext context);
         void OnSpawnMother(InputAction.CallbackContext context);
         void OnSpawnDaughter(InputAction.CallbackContext context);

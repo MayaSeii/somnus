@@ -1,3 +1,5 @@
+using System.Collections;
+using Audio;
 using UnityEngine;
 
 namespace Objects
@@ -23,9 +25,8 @@ namespace Objects
 
         public void TurnOn()
         {
-            On.SetActive(true);
-            Off.SetActive(false);
             _isOn = true;
+            StartCoroutine(TVOnSound());
         }
         
         public void TurnOff()
@@ -33,6 +34,20 @@ namespace Objects
             On.SetActive(false);
             Off.SetActive(true);
             _isOn = false;
+
+            AudioManager.PlayOneShot(FMODEvents.Instance.TVClick, transform.position);
+            AudioManager.Instance.StopAmbience("TV Static");
+        }
+
+        private IEnumerator TVOnSound()
+        {
+            AudioManager.PlayOneShot(FMODEvents.Instance.TVClick, transform.position);
+            
+            yield return new WaitForSeconds(.15f);
+            
+            On.SetActive(true);
+            Off.SetActive(false);
+            AudioManager.Instance.InitialiseAmbience("TV Static", FMODEvents.Instance.TVStatic, transform);
         }
     }
 }

@@ -16,6 +16,7 @@ TagManager:
   - Patrol Point
   - Nightmare
   - Fader
+  - Wall Phone
   layers:
   - Default
   - TransparentFX

@@ -295,6 +295,15 @@
                     "initialStateCheck": false
                 },
                 {
+                    "name": "Haunt - Kitchen Phone",
+                    "type": "Button",
+                    "id": "cc2d5078-4eab-4569-8d9e-15435e883231",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "Spawn - Father",
                     "type": "Button",
                     "id": "e20c0b1f-750b-4acf-84c6-7304024c7f84",
@@ -496,6 +505,17 @@
                     "action": "Cheat - Sleep",
                     "isComposite": false,
                     "isPartOfComposite": true
+                },
+                {
+                    "name": "",
+                    "id": "0fe6d95f-5961-4f75-b836-addbc25376b5",
+                    "path": "<Keyboard>/numpad4",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Haunt - Kitchen Phone",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         }
