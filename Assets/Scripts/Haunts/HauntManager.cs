@@ -1,3 +1,4 @@
+using Audio;
 using General;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -34,11 +35,13 @@ namespace Haunts
             if (_fatherInstance == null)
             {
                 _fatherInstance = Instantiate(Father, new Vector3(0f, -0.145f, 12f), Quaternion.Euler(0f, 180f, 0f));
+                AudioManager.Instance.InitialiseAmbience("Father Music", FMODEvents.Instance.FatherMusic, GameManager.Instance.Player.transform);
             }
             else
             {
                 Destroy(_fatherInstance);
                 _fatherInstance = null;
+                AudioManager.Instance.StopAmbience("Father Music");
             }
         }
         

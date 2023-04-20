@@ -76,6 +76,8 @@ namespace Audio
         
         public void InitialiseAmbience(string title, EventReference sound, Transform tf, bool stop = false)
         {
+            if (EventInstances.ContainsKey(title)) return;
+            
             var instance = CreateEventInstance(title, sound);
             RuntimeManager.AttachInstanceToGameObject(instance, tf);
             if (!stop) instance.start();

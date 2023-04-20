@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using Audio;
 using General;
@@ -11,12 +12,23 @@ namespace Nightmares
 {
     public class NightmareController : MonoBehaviour
     {
+        [field: SerializeField] public NightmareType Type { get; set; }
+        
         private void OnTriggerEnter(Collider other)
         {
             if (other.CompareTag("Room Area"))
             {
                 other.transform.parent.GetComponentInChildren<LightSwitch>().ForceOff();
             }
+        }
+
+        private void Update()
+        {
+            var parameter = Type == NightmareType.Father ? "distanceToFather" : "distanceToMother";
+
+            var distance = Mathf.Clamp(Vector3.Distance(transform.position, GameManager.Instance.Player.transform.position), 0, 20f);
+            
+            AudioManager.ChangeParameter(AudioManager.Instance.EventInstances["Father Music"], parameter, distance);
         }
 
         public void Jumpscare()

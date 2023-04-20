@@ -12,6 +12,7 @@ namespace Audio
         [field: SerializeField] public EventReference GameStart { get; private set; }
         [field: SerializeField] public EventReference RandomMusic { get; private set; }
         [field: SerializeField] public EventReference KeySmash { get; private set; }
+        [field: SerializeField] public EventReference FatherMusic { get; private set; }
         
         [field: Header("Interface")]
         [field: SerializeField] public EventReference MenuBuzz { get; private set; }

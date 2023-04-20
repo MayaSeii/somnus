@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.37311953, g: 0.38074014, b: 0.3587274, a: 1}
+  m_IndirectSpecularColor: {r: 0.37311938, g: 0.38074005, b: 0.35872707, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -195,6 +195,13 @@ MonoBehaviour:
       Data3: 1821430448
       Data4: 830531037
     Path: event:/SFX/KeySmash
+  <FatherMusic>k__BackingField:
+    Guid:
+      Data1: 1647371577
+      Data2: 1108437618
+      Data3: -1043335271
+      Data4: -1683693532
+    Path: event:/Music/FatherMusic
   <MenuBuzz>k__BackingField:
     Guid:
       Data1: 1267442920
