@@ -227,7 +227,7 @@ public partial class @Controls : IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""f901102e-209a-49a7-a2ba-9c5dc01c1817"",
-                    ""path"": ""<Keyboard>/f"",
+                    ""path"": ""<Mouse>/leftButton"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -410,7 +410,7 @@ public partial class @Controls : IInputActionCollection2, IDisposable
                 {
                     ""name"": ""binding"",
                     ""id"": ""69f7bdf3-a356-49a7-9e3d-4337d0b7e321"",
-                    ""path"": ""<Keyboard>/f"",
+                    ""path"": ""<Keyboard>/g"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""KeyboardMouse"",
@@ -443,7 +443,7 @@ public partial class @Controls : IInputActionCollection2, IDisposable
                 {
                     ""name"": ""binding"",
                     ""id"": ""bbd987d7-7982-417c-9bd0-2ac924212577"",
-                    ""path"": ""<Keyboard>/m"",
+                    ""path"": ""<Keyboard>/j"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""KeyboardMouse"",
@@ -476,7 +476,7 @@ public partial class @Controls : IInputActionCollection2, IDisposable
                 {
                     ""name"": ""binding"",
                     ""id"": ""04e42c62-5faa-4e77-9949-8f787027c81e"",
-                    ""path"": ""<Keyboard>/d"",
+                    ""path"": ""<Keyboard>/m"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""KeyboardMouse"",

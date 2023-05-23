@@ -220,6 +220,12 @@ namespace Controllers
         {
             _canMove = false;
         }
+
+        public void ForceMovement(Vector3 position)
+        {
+            var trans = transform;
+            trans.position = new Vector3(position.x, trans.position.y, position.z);
+        }
     
         #endregion
     
