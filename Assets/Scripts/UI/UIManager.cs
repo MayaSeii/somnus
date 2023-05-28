@@ -256,7 +256,8 @@ namespace UI
         
         public void TogglePsx(bool enablePsx)
         {
-            _psxEffects.enabled = enablePsx;
+            //_psxEffects.enabled = enablePsx;
+            return;
         }
 
         public void ToggleChromaticAberration(bool enableChromaticAberration)

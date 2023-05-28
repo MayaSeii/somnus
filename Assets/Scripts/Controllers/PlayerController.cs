@@ -6,6 +6,8 @@ using Quaternion = UnityEngine.Quaternion;
 using Vector3 = UnityEngine.Vector3;
 using FMOD.Studio;
 using General;
+using Dreams;
+using Haunts;
 using Inputs;
 using Nightmares;
 using Objects;
@@ -13,6 +15,7 @@ using Settings;
 using UI;
 using UnityEngine.Serialization;
 using STOP_MODE = FMOD.Studio.STOP_MODE;
+using System.Collections;
 
 namespace Controllers
 {
@@ -46,11 +49,23 @@ namespace Controllers
 
         public float RestAchieved { get; set; }
         private bool _isBlinking;
-    
+        private bool _firstDream;
+        private bool _secondDream;
+        private bool _thirdDream;
+
         #endregion
-    
+
+        #region - VAR Dreams -
+
+        [field: Header("Dreams")]
+        [field: SerializeField] public GameObject DaughterDream { get; set; }
+        [field: SerializeField] public GameObject ClockDream { get; set; }
+        [field: SerializeField] public GameObject FatherDream { get; set; }
+
+        #endregion
+
         #region - VAR Standing -
-    
+
         [field: SerializeField, Header("Standing")] public float CameraHeight { get; set; }
         [field: SerializeField] public float ColliderHeight { get; set; }
         [field: SerializeField] public float Speed { get; set; }
@@ -124,7 +139,10 @@ namespace Controllers
         private void Start()
         {
             _canMove = true;
-            
+            _firstDream = false;
+            _secondDream = false;
+            _thirdDream = false;
+
             _rb = GetComponent<Rigidbody>();
             _collider = GetComponent<CapsuleCollider>();
         
@@ -139,9 +157,9 @@ namespace Controllers
 
             _sin = _cameraHeight;
         }
-    
+
         #endregion
-    
+
         #region - UNITY Updates -
 
         private void Update()
@@ -229,7 +247,7 @@ namespace Controllers
     
         #endregion
     
-        #region - Blinking & Rest -
+        #region - Blinking & Rest & Dreams -
     
         public void Blink(InputAction.CallbackContext context)
         {
@@ -245,14 +263,52 @@ namespace Controllers
         {
             if (!_isBlinking) return;
         
-            RestAchieved += Time.deltaTime;
+            RestAchieved += (Time.deltaTime * 3);
             UIManager.Instance.UpdateRestMeter(RestAchieved);
+
+            if (Mathf.RoundToInt(RestAchieved) == 15 && !_firstDream) StartCoroutine(FirstDream());
+            if (Mathf.RoundToInt(RestAchieved) == 30 && !_secondDream) StartCoroutine(SecondDream());
+            if (Mathf.RoundToInt(RestAchieved) == 45 && !_thirdDream) StartCoroutine(ThirdDream());
         }
-    
+
+        private IEnumerator FirstDream()
+        {
+            GameManager.Instance.Player.Stop();
+            Debug.Log("Daughter dream");
+
+            yield return new WaitForSeconds(15f);
+            StartCoroutine(HauntManager.Instance.ActivateDaughterHauntCoroutine());
+            GameManager.Instance.Player.Start();
+            _firstDream = true;
+        }
+        private IEnumerator SecondDream()
+        {
+            StopCoroutine(FirstDream());
+
+            GameManager.Instance.Player.Stop();
+            Debug.Log("Clock dream");
+
+            yield return new WaitForSeconds(15f);
+            HauntManager.Instance.ForceClockChimeHaunt(default);
+            GameManager.Instance.Player.Start();
+            _secondDream = true;
+        }
+        private IEnumerator ThirdDream()
+        {
+            StopCoroutine(SecondDream());
+
+            GameManager.Instance.Player.Stop();
+            Debug.Log("Father dream");
+
+            yield return new WaitForSeconds(15f);
+            GameManager.Instance.Player.Start();
+            _thirdDream = true;
+        }
+
         #endregion
-    
+
         #region - Crouching -
-    
+
         public void ToggleCrouch(InputAction.CallbackContext context)
         {
             if (Math.Abs(_collider.height - 1) < .1f) PrepareStand(context);
@@ -278,7 +334,7 @@ namespace Controllers
     
         private void Stand()
         {
-            _cameraHeight = CameraHeight;
+            _cameraHeight = CameraHeight;   
             _speed = Speed;
         
             _collider.height = ColliderHeight;

@@ -34,6 +34,7 @@ namespace Nightmares
         public void Jumpscare()
         {
             AudioManager.PlayOneShot(FMODEvents.Instance.Jumpscare, transform.position);
+            AudioManager.Instance.StopAmbience("Father Music");
 
             GetComponent<BaseStateMachine>().enabled = false;
             GetComponent<NavMeshAgent>().enabled = false;

@@ -1,6 +1,7 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using System.Threading;
 
 namespace General
 {
@@ -14,19 +15,21 @@ namespace General
         [field: SerializeField] public TMP_Text CurrentRoomText { get; set; }
         [field: SerializeField] public TMP_Text CurrentInteractableText { get; set; }
         [field: SerializeField] public TMP_Text LastHaunt { get; set; }
-    
+        [field: SerializeField] public TMP_Text NextHaunt { get; set; }
+
         #endregion
-    
+
         #region - UNITY Awake -
-    
+
         private void Awake()
         {
             if (Instance != null) Debug.LogError("Found more than one Debug Manager in the scene.");
             Instance = this;
+            
         }
-    
+
         #endregion
-    
+
         #region - Debug Menu -
 
         public void ToggleDebugInfo(InputAction.CallbackContext context)
@@ -48,9 +51,13 @@ namespace General
         {
             LastHaunt.text = $"Last Haunt: {text}";
         }
-        
+        public void UpdateNextHaunt(float number)
+        {
+            NextHaunt.text = $"Next Haunt in: {number}";
+        }
+
         #endregion
-        
+
         #region - Cheats -
 
         public static void CheatSleep(InputAction.CallbackContext context)

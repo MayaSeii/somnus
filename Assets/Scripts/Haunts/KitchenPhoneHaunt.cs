@@ -8,7 +8,9 @@ namespace Haunts
     {
         public override void Execute()
         {
+            float timer = 20f;
             FindObjectOfType<WallPhone>().Ring();
+            timer -= Time.deltaTime;
         }
     }
 }

@@ -38,5 +38,9 @@ namespace Objects
             (trans = transform).GetChild(1).rotation = Quaternion.Euler(90, 0, 90);
             AudioManager.PlayOneShot(FMODEvents.Instance.LightSwitchOff, trans.position);
         }
+        public bool GetState()
+        {
+            return _state;
+        }
     }
 }
