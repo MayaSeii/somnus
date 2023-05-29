@@ -6,7 +6,6 @@ using Quaternion = UnityEngine.Quaternion;
 using Vector3 = UnityEngine.Vector3;
 using FMOD.Studio;
 using General;
-using Dreams;
 using Haunts;
 using Inputs;
 using Nightmares;
@@ -21,6 +20,7 @@ namespace Controllers
 {
     public class PlayerController : MonoBehaviour
     {
+        public static PlayerController Instance;
         [field: SerializeField] public Transform CameraTransform { get; set; }
     
         #region - VAR Physics -
@@ -42,12 +42,14 @@ namespace Controllers
         [field: SerializeField, Header("Looking")] public float CameraPitchLimit { get; set; }
     
         private float _cameraPitch;
-    
+
         #endregion
-    
+
         #region - VAR Blinking & Rest -
 
+        [field: SerializeField] public GameObject BlinkOverlay { get; set; }
         public float RestAchieved { get; set; }
+        public bool CanBlink { get; set; }
         private bool _isBlinking;
         private bool _firstDream;
         private bool _secondDream;
@@ -131,11 +133,16 @@ namespace Controllers
         #region - VAR Holding Objects -
 
         public GameObject HeldObject { get; private set; }
-        
+
         #endregion
 
-        #region - UNITY Start -
-    
+        #region - UNITY Awake & Start -
+
+        private void Awake()
+        {
+            Instance = this;
+        }
+
         private void Start()
         {
             _canMove = true;
@@ -156,6 +163,10 @@ namespace Controllers
             AudioManager.ChangeParameter(_footstepsInstance, "footstepFrequency", .8f);
 
             _sin = _cameraHeight;
+
+            DaughterDream.SetActive(false);
+            ClockDream.SetActive(false);
+            FatherDream.SetActive(false);
         }
 
         #endregion
@@ -251,7 +262,7 @@ namespace Controllers
     
         public void Blink(InputAction.CallbackContext context)
         {
-            _isBlinking = true;
+            if(CanBlink) _isBlinking = true;
         }
     
         public void StopBlinking(InputAction.CallbackContext context)
@@ -274,34 +285,44 @@ namespace Controllers
         private IEnumerator FirstDream()
         {
             GameManager.Instance.Player.Stop();
-            Debug.Log("Daughter dream");
+            HauntManager.Instance.StopAllHaunts(default);
+            BlinkOverlay.SetActive(false);
+            DaughterDream.SetActive(true);
 
-            yield return new WaitForSeconds(15f);
-            StartCoroutine(HauntManager.Instance.ActivateDaughterHauntCoroutine());
+            yield return new WaitForSeconds(8f);
+            BlinkOverlay.SetActive(true);
+            DaughterDream.SetActive(false);
             GameManager.Instance.Player.Start();
+            HauntManager.Instance.StartAllHaunts(default);
             _firstDream = true;
         }
         private IEnumerator SecondDream()
         {
-            StopCoroutine(FirstDream());
-
             GameManager.Instance.Player.Stop();
-            Debug.Log("Clock dream");
+            HauntManager.Instance.StopAllHaunts(default);
+            BlinkOverlay.SetActive(false);
+            ClockDream.SetActive(true);
 
-            yield return new WaitForSeconds(15f);
-            HauntManager.Instance.ForceClockChimeHaunt(default);
+            yield return new WaitForSeconds(8f);
+            BlinkOverlay.SetActive(true);
+            ClockDream.SetActive(false);
             GameManager.Instance.Player.Start();
+            HauntManager.Instance.StartAllHaunts(default);
+            HauntManager.Instance.ForceClockChimeHaunt(default);
             _secondDream = true;
         }
         private IEnumerator ThirdDream()
         {
-            StopCoroutine(SecondDream());
-
             GameManager.Instance.Player.Stop();
-            Debug.Log("Father dream");
+            HauntManager.Instance.StopAllHaunts(default);
+            BlinkOverlay.SetActive(false);
+            FatherDream.SetActive(true);
 
-            yield return new WaitForSeconds(15f);
+            yield return new WaitForSeconds(10f);
+            BlinkOverlay.SetActive(true);
+            FatherDream.SetActive(false);
             GameManager.Instance.Player.Start();
+            HauntManager.Instance.StartAllHaunts(default);
             _thirdDream = true;
         }
 

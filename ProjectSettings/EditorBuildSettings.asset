@@ -15,6 +15,9 @@ EditorBuildSettings:
     path: Assets/Scenes/Loading.unity
     guid: 32d25dc9f52ae7144900a9bd8a175fe8
   - enabled: 1
-    path: Assets/Scenes/Prototype_O.unity
-    guid: 9fc0d4010bbf28b4594072e72b8655ab
+    path: Assets/Scenes/Prototype.unity
+    guid: fb3d16f9f679973479d531d274c2374d
+  - enabled: 0
+    path: 
+    guid: 00000000000000000000000000000000
   m_configObjects: {}

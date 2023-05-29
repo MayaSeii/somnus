@@ -15,8 +15,9 @@ public class TitleManager : MonoBehaviour
     
     [field: SerializeField] public Image Fader { get; private set; }
     [field: SerializeField] public GameObject TitleScreen { get; private set; }
+    [field: SerializeField] public GameObject ConfirmationWindow { get; private set; }
     [field: SerializeField] public GameObject SettingsMenu { get; private set; }
-    
+
     private void Awake()
     {
         Instance = this;

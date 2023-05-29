@@ -304,6 +304,24 @@
                     "initialStateCheck": false
                 },
                 {
+                    "name": "Haunt - Front Door",
+                    "type": "Button",
+                    "id": "fe939c54-981a-4113-935f-2149af6a32b9",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Haunt - Bathroom Father",
+                    "type": "Button",
+                    "id": "59d8f486-b33f-4fd3-a6c7-15b036ea7ddb",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "Spawn - Father",
                     "type": "Button",
                     "id": "e20c0b1f-750b-4acf-84c6-7304024c7f84",
@@ -334,6 +352,24 @@
                     "name": "Cheat - Sleep",
                     "type": "Button",
                     "id": "2e56e937-fb3d-498d-a0af-79cdc7d35195",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Cheat - Stop Haunts",
+                    "type": "Button",
+                    "id": "950fcf23-7c5d-44ee-8cab-b7993d9ec481",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Cheat - Start Haunts",
+                    "type": "Button",
+                    "id": "c5de0ca7-3e1f-4547-bed3-6c47f6019053",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -514,6 +550,50 @@
                     "processors": "",
                     "groups": "",
                     "action": "Haunt - Kitchen Phone",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "e5681307-0226-4bc1-8122-474d1c847612",
+                    "path": "<Keyboard>/numpad5",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Haunt - Front Door",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "72a68c29-bb1c-416e-a6ae-4f13df829f40",
+                    "path": "<Keyboard>/u",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Cheat - Stop Haunts",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "f48a0a6f-e274-4bca-86c1-3e8ec9284f5e",
+                    "path": "<Keyboard>/i",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Cheat - Start Haunts",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "515cba1a-cef4-461e-a3be-3ba51f32fa41",
+                    "path": "<Keyboard>/numpad6",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Haunt - Bathroom Father",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

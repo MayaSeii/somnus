@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Linq;
 using Audio;
+using Controllers;
 using FMOD.Studio;
 using General;
 using Inputs;
@@ -30,7 +31,8 @@ namespace UI
         
         [field: SerializeField, Header("Menus")] public GameObject PauseMenu { get; private set; }
         [field: SerializeField] public GameObject SettingsMenu { get; private set; }
-    
+        [field: SerializeField] public GameObject CpnfirmationWindow { get; private set; }
+
         private bool _isPaused;
         
         #endregion
@@ -209,11 +211,12 @@ namespace UI
         
         public static IEnumerator FadeOut()
         {
+            PlayerController.Instance.Stop();
             yield return new WaitForSeconds(3f);
             Instance.Fader.SetActive(true);
             Instance.Fader.GetComponent<Fader>().TargetAlpha = 1f;
             
-            yield return new WaitForSeconds(4f);
+            yield return new WaitForSeconds(6f);
             GameManager.ReturnToMenu();
         }
     

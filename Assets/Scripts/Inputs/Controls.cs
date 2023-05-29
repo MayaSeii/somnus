@@ -326,6 +326,24 @@ public partial class @Controls : IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
+                    ""name"": ""Haunt - Front Door"",
+                    ""type"": ""Button"",
+                    ""id"": ""fe939c54-981a-4113-935f-2149af6a32b9"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Haunt - Bathroom Father"",
+                    ""type"": ""Button"",
+                    ""id"": ""59d8f486-b33f-4fd3-a6c7-15b036ea7ddb"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
                     ""name"": ""Spawn - Father"",
                     ""type"": ""Button"",
                     ""id"": ""e20c0b1f-750b-4acf-84c6-7304024c7f84"",
@@ -356,6 +374,24 @@ public partial class @Controls : IInputActionCollection2, IDisposable
                     ""name"": ""Cheat - Sleep"",
                     ""type"": ""Button"",
                     ""id"": ""2e56e937-fb3d-498d-a0af-79cdc7d35195"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Cheat - Stop Haunts"",
+                    ""type"": ""Button"",
+                    ""id"": ""950fcf23-7c5d-44ee-8cab-b7993d9ec481"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Cheat - Start Haunts"",
+                    ""type"": ""Button"",
+                    ""id"": ""c5de0ca7-3e1f-4547-bed3-6c47f6019053"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
@@ -538,6 +574,50 @@ public partial class @Controls : IInputActionCollection2, IDisposable
                     ""action"": ""Haunt - Kitchen Phone"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""e5681307-0226-4bc1-8122-474d1c847612"",
+                    ""path"": ""<Keyboard>/numpad5"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Haunt - Front Door"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""72a68c29-bb1c-416e-a6ae-4f13df829f40"",
+                    ""path"": ""<Keyboard>/u"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Cheat - Stop Haunts"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""f48a0a6f-e274-4bca-86c1-3e8ec9284f5e"",
+                    ""path"": ""<Keyboard>/i"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Cheat - Start Haunts"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""515cba1a-cef4-461e-a3be-3ba51f32fa41"",
+                    ""path"": ""<Keyboard>/numpad6"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Haunt - Bathroom Father"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -580,10 +660,14 @@ public partial class @Controls : IInputActionCollection2, IDisposable
         m_Debug_HauntClockChime = m_Debug.FindAction("Haunt - Clock Chime", throwIfNotFound: true);
         m_Debug_HauntTVOn = m_Debug.FindAction("Haunt - TV On", throwIfNotFound: true);
         m_Debug_HauntKitchenPhone = m_Debug.FindAction("Haunt - Kitchen Phone", throwIfNotFound: true);
+        m_Debug_HauntFrontDoor = m_Debug.FindAction("Haunt - Front Door", throwIfNotFound: true);
+        m_Debug_HauntBathroomFather = m_Debug.FindAction("Haunt - Bathroom Father", throwIfNotFound: true);
         m_Debug_SpawnFather = m_Debug.FindAction("Spawn - Father", throwIfNotFound: true);
         m_Debug_SpawnMother = m_Debug.FindAction("Spawn - Mother", throwIfNotFound: true);
         m_Debug_SpawnDaughter = m_Debug.FindAction("Spawn - Daughter", throwIfNotFound: true);
         m_Debug_CheatSleep = m_Debug.FindAction("Cheat - Sleep", throwIfNotFound: true);
+        m_Debug_CheatStopHaunts = m_Debug.FindAction("Cheat - Stop Haunts", throwIfNotFound: true);
+        m_Debug_CheatStartHaunts = m_Debug.FindAction("Cheat - Start Haunts", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -769,10 +853,14 @@ public partial class @Controls : IInputActionCollection2, IDisposable
     private readonly InputAction m_Debug_HauntClockChime;
     private readonly InputAction m_Debug_HauntTVOn;
     private readonly InputAction m_Debug_HauntKitchenPhone;
+    private readonly InputAction m_Debug_HauntFrontDoor;
+    private readonly InputAction m_Debug_HauntBathroomFather;
     private readonly InputAction m_Debug_SpawnFather;
     private readonly InputAction m_Debug_SpawnMother;
     private readonly InputAction m_Debug_SpawnDaughter;
     private readonly InputAction m_Debug_CheatSleep;
+    private readonly InputAction m_Debug_CheatStopHaunts;
+    private readonly InputAction m_Debug_CheatStartHaunts;
     public struct DebugActions
     {
         private @Controls m_Wrapper;
@@ -781,10 +869,14 @@ public partial class @Controls : IInputActionCollection2, IDisposable
         public InputAction @HauntClockChime => m_Wrapper.m_Debug_HauntClockChime;
         public InputAction @HauntTVOn => m_Wrapper.m_Debug_HauntTVOn;
         public InputAction @HauntKitchenPhone => m_Wrapper.m_Debug_HauntKitchenPhone;
+        public InputAction @HauntFrontDoor => m_Wrapper.m_Debug_HauntFrontDoor;
+        public InputAction @HauntBathroomFather => m_Wrapper.m_Debug_HauntBathroomFather;
         public InputAction @SpawnFather => m_Wrapper.m_Debug_SpawnFather;
         public InputAction @SpawnMother => m_Wrapper.m_Debug_SpawnMother;
         public InputAction @SpawnDaughter => m_Wrapper.m_Debug_SpawnDaughter;
         public InputAction @CheatSleep => m_Wrapper.m_Debug_CheatSleep;
+        public InputAction @CheatStopHaunts => m_Wrapper.m_Debug_CheatStopHaunts;
+        public InputAction @CheatStartHaunts => m_Wrapper.m_Debug_CheatStartHaunts;
         public InputActionMap Get() { return m_Wrapper.m_Debug; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -806,6 +898,12 @@ public partial class @Controls : IInputActionCollection2, IDisposable
                 @HauntKitchenPhone.started -= m_Wrapper.m_DebugActionsCallbackInterface.OnHauntKitchenPhone;
                 @HauntKitchenPhone.performed -= m_Wrapper.m_DebugActionsCallbackInterface.OnHauntKitchenPhone;
                 @HauntKitchenPhone.canceled -= m_Wrapper.m_DebugActionsCallbackInterface.OnHauntKitchenPhone;
+                @HauntFrontDoor.started -= m_Wrapper.m_DebugActionsCallbackInterface.OnHauntFrontDoor;
+                @HauntFrontDoor.performed -= m_Wrapper.m_DebugActionsCallbackInterface.OnHauntFrontDoor;
+                @HauntFrontDoor.canceled -= m_Wrapper.m_DebugActionsCallbackInterface.OnHauntFrontDoor;
+                @HauntBathroomFather.started -= m_Wrapper.m_DebugActionsCallbackInterface.OnHauntBathroomFather;
+                @HauntBathroomFather.performed -= m_Wrapper.m_DebugActionsCallbackInterface.OnHauntBathroomFather;
+                @HauntBathroomFather.canceled -= m_Wrapper.m_DebugActionsCallbackInterface.OnHauntBathroomFather;
                 @SpawnFather.started -= m_Wrapper.m_DebugActionsCallbackInterface.OnSpawnFather;
                 @SpawnFather.performed -= m_Wrapper.m_DebugActionsCallbackInterface.OnSpawnFather;
                 @SpawnFather.canceled -= m_Wrapper.m_DebugActionsCallbackInterface.OnSpawnFather;
@@ -818,6 +916,12 @@ public partial class @Controls : IInputActionCollection2, IDisposable
                 @CheatSleep.started -= m_Wrapper.m_DebugActionsCallbackInterface.OnCheatSleep;
                 @CheatSleep.performed -= m_Wrapper.m_DebugActionsCallbackInterface.OnCheatSleep;
                 @CheatSleep.canceled -= m_Wrapper.m_DebugActionsCallbackInterface.OnCheatSleep;
+                @CheatStopHaunts.started -= m_Wrapper.m_DebugActionsCallbackInterface.OnCheatStopHaunts;
+                @CheatStopHaunts.performed -= m_Wrapper.m_DebugActionsCallbackInterface.OnCheatStopHaunts;
+                @CheatStopHaunts.canceled -= m_Wrapper.m_DebugActionsCallbackInterface.OnCheatStopHaunts;
+                @CheatStartHaunts.started -= m_Wrapper.m_DebugActionsCallbackInterface.OnCheatStartHaunts;
+                @CheatStartHaunts.performed -= m_Wrapper.m_DebugActionsCallbackInterface.OnCheatStartHaunts;
+                @CheatStartHaunts.canceled -= m_Wrapper.m_DebugActionsCallbackInterface.OnCheatStartHaunts;
             }
             m_Wrapper.m_DebugActionsCallbackInterface = instance;
             if (instance != null)
@@ -834,6 +938,12 @@ public partial class @Controls : IInputActionCollection2, IDisposable
                 @HauntKitchenPhone.started += instance.OnHauntKitchenPhone;
                 @HauntKitchenPhone.performed += instance.OnHauntKitchenPhone;
                 @HauntKitchenPhone.canceled += instance.OnHauntKitchenPhone;
+                @HauntFrontDoor.started += instance.OnHauntFrontDoor;
+                @HauntFrontDoor.performed += instance.OnHauntFrontDoor;
+                @HauntFrontDoor.canceled += instance.OnHauntFrontDoor;
+                @HauntBathroomFather.started += instance.OnHauntBathroomFather;
+                @HauntBathroomFather.performed += instance.OnHauntBathroomFather;
+                @HauntBathroomFather.canceled += instance.OnHauntBathroomFather;
                 @SpawnFather.started += instance.OnSpawnFather;
                 @SpawnFather.performed += instance.OnSpawnFather;
                 @SpawnFather.canceled += instance.OnSpawnFather;
@@ -846,6 +956,12 @@ public partial class @Controls : IInputActionCollection2, IDisposable
                 @CheatSleep.started += instance.OnCheatSleep;
                 @CheatSleep.performed += instance.OnCheatSleep;
                 @CheatSleep.canceled += instance.OnCheatSleep;
+                @CheatStopHaunts.started += instance.OnCheatStopHaunts;
+                @CheatStopHaunts.performed += instance.OnCheatStopHaunts;
+                @CheatStopHaunts.canceled += instance.OnCheatStopHaunts;
+                @CheatStartHaunts.started += instance.OnCheatStartHaunts;
+                @CheatStartHaunts.performed += instance.OnCheatStartHaunts;
+                @CheatStartHaunts.canceled += instance.OnCheatStartHaunts;
             }
         }
     }
@@ -880,9 +996,13 @@ public partial class @Controls : IInputActionCollection2, IDisposable
         void OnHauntClockChime(InputAction.CallbackContext context);
         void OnHauntTVOn(InputAction.CallbackContext context);
         void OnHauntKitchenPhone(InputAction.CallbackContext context);
+        void OnHauntFrontDoor(InputAction.CallbackContext context);
+        void OnHauntBathroomFather(InputAction.CallbackContext context);
         void OnSpawnFather(InputAction.CallbackContext context);
         void OnSpawnMother(InputAction.CallbackContext context);
         void OnSpawnDaughter(InputAction.CallbackContext context);
         void OnCheatSleep(InputAction.CallbackContext context);
+        void OnCheatStopHaunts(InputAction.CallbackContext context);
+        void OnCheatStartHaunts(InputAction.CallbackContext context);
     }
 }

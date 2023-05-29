@@ -42,7 +42,7 @@ namespace UI
             RuntimeManager.PlayOneShot(FMODEvents.Instance.PageButton);
             TitleUIManager.Instance.TogglePage(Array.IndexOf(TitleUIManager.Instance.Buttons, this));
         }
-        
+
         public void OnPointerEnter(PointerEventData eventData)
         {
             RuntimeManager.PlayOneShot(FMODEvents.Instance.Hover);

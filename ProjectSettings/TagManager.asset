@@ -17,6 +17,9 @@ TagManager:
   - Nightmare
   - Fader
   - Wall Phone
+  - Front Door
+  - Fake Father
+  - Bed
   layers:
   - Default
   - TransparentFX

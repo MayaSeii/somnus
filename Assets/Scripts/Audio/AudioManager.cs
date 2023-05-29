@@ -10,7 +10,7 @@ namespace Audio
     public class AudioManager : MonoBehaviour
     {
         public static AudioManager Instance { get; private set; }
-        
+
         public float MasterVolume { get; set; }
         public float MusicVolume { get; set; }
         public float SoundVolume { get; set; }

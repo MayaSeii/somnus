@@ -41,17 +41,21 @@ namespace Inputs
         private InputAction _iDebugHauntClockChime;
         private InputAction _iDebugHauntTVOn;
         private InputAction _iDebugHauntKitchenPhone;
-        
+        private InputAction _iDebugHauntFrontDoor;
+        private InputAction _iDebugHauntBathroomFather;
+
         private InputAction _iDebugSpawnFather;
         private InputAction _iDebugSpawnMother;
         private InputAction _iDebugSpawnDaughter;
-        
+
         private InputAction _iDebugCheatSleep;
-        
+        private InputAction _iDebugCheatStopHaunts;
+        private InputAction _iDebugCheatStartHaunts;
+
         #endregion
 
         #region - UNITY Awake -
-        
+
         private void Awake()
         {
             Instance = this;
@@ -73,16 +77,20 @@ namespace Inputs
             _iDebugHauntClockChime = _controls.Debug.HauntClockChime;
             _iDebugHauntTVOn = _controls.Debug.HauntTVOn;
             _iDebugHauntKitchenPhone = _controls.Debug.HauntKitchenPhone;
+            _iDebugHauntFrontDoor = _controls.Debug.HauntFrontDoor;
+            _iDebugHauntBathroomFather = _controls.Debug.HauntBathroomFather;
             _iDebugSpawnFather = _controls.Debug.SpawnFather;
             _iDebugSpawnMother = _controls.Debug.SpawnMother;
             _iDebugSpawnDaughter = _controls.Debug.SpawnDaughter;
             _iDebugCheatSleep = _controls.Debug.CheatSleep;
+            _iDebugCheatStopHaunts = _controls.Debug.CheatStopHaunts;
+            _iDebugCheatStartHaunts = _controls.Debug.CheatStartHaunts;
         }
-        
+
         #endregion
 
         #region - UNITY Start -
-        
+
         private void Start()
         {
             var rebinds = PlayerPrefs.GetString("rebinds", string.Empty);
@@ -111,10 +119,14 @@ namespace Inputs
             _iDebugHauntClockChime.Enable();
             _iDebugHauntTVOn.Enable();
             _iDebugHauntKitchenPhone.Enable();
+            _iDebugHauntFrontDoor.Enable();
+            _iDebugHauntBathroomFather.Enable();
             _iDebugSpawnFather.Enable();
             _iDebugSpawnMother.Enable();
             _iDebugSpawnDaughter.Enable();
             _iDebugCheatSleep.Enable();
+            _iDebugCheatStopHaunts.Enable();
+            _iDebugCheatStartHaunts.Enable();
         }
 
         private void OnDisable()
@@ -136,10 +148,14 @@ namespace Inputs
             _iDebugHauntClockChime.Disable();
             _iDebugHauntTVOn.Disable();
             _iDebugHauntKitchenPhone.Disable();
+            _iDebugHauntFrontDoor.Disable();
+            _iDebugHauntBathroomFather.Disable();
             _iDebugSpawnFather.Disable();
             _iDebugSpawnMother.Disable();
             _iDebugSpawnDaughter.Disable();
             _iDebugCheatSleep.Disable();
+            _iDebugCheatStopHaunts.Disable();
+            _iDebugCheatStartHaunts.Disable();
         }
         
         #endregion
@@ -190,10 +206,14 @@ namespace Inputs
             _iDebugHauntClockChime.started += HauntManager.Instance.ForceClockChimeHaunt;
             _iDebugHauntTVOn.started += HauntManager.Instance.ForceTVOnHaunt;
             _iDebugHauntKitchenPhone.started += HauntManager.Instance.ForceKitchenPhoneHaunt;
+            _iDebugHauntFrontDoor.started += HauntManager.Instance.ForceFrontDoorHaunt;
+            _iDebugHauntBathroomFather.started += HauntManager.Instance.ForceBathroomFatherHaunt;
             _iDebugSpawnFather.started += HauntManager.Instance.ForceSpawnFather;
             _iDebugSpawnMother.started += HauntManager.Instance.ForceSpawnMother;
             _iDebugSpawnDaughter.started += HauntManager.Instance.ForceSpawnDaughter;
             _iDebugCheatSleep.started += DebugManager.CheatSleep;
+            _iDebugCheatStopHaunts.started += HauntManager.Instance.StopAllHaunts;
+            _iDebugCheatStartHaunts.started += HauntManager.Instance.StartAllHaunts;
         }
 
         public void Unregister()
@@ -224,10 +244,14 @@ namespace Inputs
             _iDebugHauntClockChime.started -= HauntManager.Instance.ForceClockChimeHaunt;
             _iDebugHauntTVOn.started -= HauntManager.Instance.ForceTVOnHaunt;
             _iDebugHauntKitchenPhone.started -= HauntManager.Instance.ForceKitchenPhoneHaunt;
+            _iDebugHauntFrontDoor.started -= HauntManager.Instance.ForceFrontDoorHaunt;
+            _iDebugHauntBathroomFather.started -= HauntManager.Instance.ForceBathroomFatherHaunt;
             _iDebugSpawnFather.started -= HauntManager.Instance.ForceSpawnFather;
             _iDebugSpawnMother.started -= HauntManager.Instance.ForceSpawnMother;
             _iDebugSpawnDaughter.started -= HauntManager.Instance.ForceSpawnDaughter;
             _iDebugCheatSleep.started -= DebugManager.CheatSleep;
+            _iDebugCheatStopHaunts.started -= HauntManager.Instance.StopAllHaunts;
+            _iDebugCheatStartHaunts.started -= HauntManager.Instance.StartAllHaunts;
         }
         
         #endregion
